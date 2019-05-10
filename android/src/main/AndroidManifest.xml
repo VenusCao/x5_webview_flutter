@@ -1,0 +1,12 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+  package="com.cjx.x5_webview">
+
+    <application>
+        <activity android:name=".X5WebViewActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:exported="false"
+            android:launchMode="singleTask"
+            android:alwaysRetainTaskState="true"
+            ></activity>
+    </application>
+</manifest>
