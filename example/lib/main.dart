@@ -54,7 +54,7 @@ class _HomePageState extends State<HomePage> {
                     print("x5Video不可用");
                   }
                 },
-                child: Text("点击打开x5video")),
+                child: Text("x5video直接播放视频")),
             RaisedButton(
                 onPressed: () async {
                   Navigator.of(context)
@@ -62,7 +62,12 @@ class _HomePageState extends State<HomePage> {
                     return DemoWebViewPage();
                   }));
                 },
-                child: Text("点击打开x5webview")),
+                child: Text("flutter内嵌x5webview")),
+            RaisedButton(
+                onPressed: () async {
+                  X5Sdk.openWebActivity("https://ifeng.com-l-ifeng.com/20180528/7391_46b6cf3b/index.m3u8",title: "web页面");
+                },
+                child: Text("x5webviewActivity")),
           ],
         ),
       ),

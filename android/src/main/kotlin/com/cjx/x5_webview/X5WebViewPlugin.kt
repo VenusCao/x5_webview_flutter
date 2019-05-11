@@ -1,6 +1,8 @@
 package com.cjx.x5_webview
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import com.tencent.smtt.sdk.QbSdk
 import com.tencent.smtt.sdk.TbsVideo
@@ -10,12 +12,12 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugin.common.PluginRegistry.Registrar
 
-class X5WebViewPlugin(var context: Context): MethodCallHandler {
+class X5WebViewPlugin(var context: Context,var activity:Activity): MethodCallHandler {
   companion object {
     @JvmStatic
     fun registerWith(registrar: Registrar) {
       val channel = MethodChannel(registrar.messenger(), "com.cjx/x5Video")
-      channel.setMethodCallHandler(X5WebViewPlugin(registrar.context()))
+      channel.setMethodCallHandler(X5WebViewPlugin(registrar.context(),registrar.activity()))
 
       registrar.platformViewRegistry().registerViewFactory("com.cjx/x5WebView",X5WebViewFactory(registrar.messenger(),registrar.activeContext()))
 
@@ -48,6 +50,16 @@ class X5WebViewPlugin(var context: Context): MethodCallHandler {
         bundle.putInt("screenMode",screenMode)
         TbsVideo.openVideo(context,url,bundle)
       }
+      "openWebActivity"->{
+        val url=call.argument<String>("url")
+        val title=call.argument<String>("title")
+        val intent=Intent(activity,X5WebViewActivity::class.java)
+        intent.putExtra("url",url)
+        intent.putExtra("title",title)
+        activity.startActivity(intent)
+      }
+
+
       else->{
         result.notImplemented()
       }

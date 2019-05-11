@@ -23,9 +23,9 @@ class X5Sdk {
     return await _channel.invokeMethod("openVideo",params);
   }
 
-  static Future<void> openWebActivity(String url,{Map<String,dynamic> args})async{
+  static Future<void> openWebActivity(String url,{String title})async{
     final Map<String, dynamic> params = <String, dynamic>{
-      'args': args,
+      'title': title,
       'url':url
     };
     return await _channel.invokeMethod("openWebActivity",params);

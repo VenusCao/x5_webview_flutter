@@ -14,18 +14,18 @@ class _DemoWebViewPageState extends State<DemoWebViewPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("webview示例"),
+        title: Text("X5WebView示例"),
       ),
       body: X5WebView(
+
         url:
-//            "https://www.baidu.com",
-            "https://ifeng.com-l-ifeng.com/20180528/7391_46b6cf3b/index.m3u8",
+//            "https://ifeng.com-l-ifeng.com/20180528/7391_46b6cf3b/index.m3u8",
+            "http://debugtbs.qq.com",
         javaScriptEnabled: true,
         onWebViewCreated: (control) {
           _controller = control;
         },
         onPageFinished: () async{
-          print("页面加载完成");
           var url=await _controller.currentUrl();
           print(url);
           var body =

@@ -2,7 +2,8 @@ package com.cjx.x5_webview
 
 import android.app.Activity
 import android.os.Bundle
-import android.widget.LinearLayout
+import android.view.MenuItem
+import android.widget.FrameLayout
 import com.tencent.smtt.export.external.interfaces.WebResourceRequest
 import com.tencent.smtt.sdk.WebView
 import com.tencent.smtt.sdk.WebViewClient
@@ -18,8 +19,10 @@ class X5WebViewActivity:Activity() {
     }
 
     private fun initView() {
+        actionBar.setDisplayHomeAsUpEnabled(true)
+        title=intent.getStringExtra("title")?:""
         webView?.apply {
-            layoutParams=LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT)
+            layoutParams=FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,FrameLayout.LayoutParams.MATCH_PARENT)
             loadUrl(intent.getStringExtra("url"))
             settings.javaScriptEnabled=true
             webViewClient= object : WebViewClient() {
@@ -34,5 +37,15 @@ class X5WebViewActivity:Activity() {
                 }
             }
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            android.R.id.home->{
+                finish()
+            }
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 }
