@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 class X5Sdk {
@@ -7,27 +8,47 @@ class X5Sdk {
       const MethodChannel('com.cjx/x5Video');
 
   static Future<bool> canUseTbsPlayer()async{
-    bool res = await _channel.invokeMethod("canUseTbsPlayer");
-    return res;
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      bool res = await _channel.invokeMethod("canUseTbsPlayer");
+      return res;
+    }else{
+      return false;
+    }
+
   }
   static Future<bool> init()async{
-    bool res = await _channel.invokeMethod("init");
-    return res;
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      bool res = await _channel.invokeMethod("init");
+      return res;
+    }else{
+      return false;
+    }
+
   }
 
-  static Future<void> openVideo(String url,int screenMode)async{
-    final Map<String, dynamic> params = <String, dynamic>{
-      'screenMode': screenMode,
-      'url':url
-    };
-    return await _channel.invokeMethod("openVideo",params);
+  static Future<void> openVideo(String url,{int screenMode})async{
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      final Map<String, dynamic> params = <String, dynamic>{
+        'screenMode': screenMode??103,
+        'url':url
+      };
+      return await _channel.invokeMethod("openVideo",params);
+    }else{
+      return;
+    }
+
   }
 
   static Future<void> openWebActivity(String url,{String title})async{
-    final Map<String, dynamic> params = <String, dynamic>{
-      'title': title,
-      'url':url
-    };
-    return await _channel.invokeMethod("openWebActivity",params);
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      final Map<String, dynamic> params = <String, dynamic>{
+        'title': title,
+        'url':url
+      };
+      return await _channel.invokeMethod("openWebActivity",params);
+    }else{
+      return;
+    }
+
   }
 }

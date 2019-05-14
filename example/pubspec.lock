@@ -142,6 +142,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.0.8"
+  webview_flutter:
+    dependency: "direct main"
+    description:
+      name: webview_flutter
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.3.6"
   x5_webview:
     dependency: "direct dev"
     description:
@@ -151,3 +158,4 @@ packages:
     version: "0.0.1"
 sdks:
   dart: ">=2.2.0 <3.0.0"
+  flutter: ">=0.11.9 <2.0.0"

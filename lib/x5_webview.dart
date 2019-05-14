@@ -4,14 +4,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
-
-typedef void WebViewCreatedCallback(WebViewController controller);
+typedef void X5WebViewCreatedCallback(X5WebViewController controller);
 typedef void PageFinishedCallback();
 typedef void ShowCustomViewCallback();
 typedef void HideCustomViewCallback();
 class X5WebView extends StatefulWidget {
   final url;
-  final WebViewCreatedCallback onWebViewCreated;
+  final X5WebViewCreatedCallback onWebViewCreated;
   final PageFinishedCallback onPageFinished;
   final ShowCustomViewCallback onShowCustomView;
   final HideCustomViewCallback onHideCustomView;
@@ -43,6 +42,8 @@ class _X5WebViewState extends State<X5WebView> {
         creationParams: _CreationParams.fromWidget(widget).toMap(),
         layoutDirection: TextDirection.rtl,
       );
+    }else if(defaultTargetPlatform == TargetPlatform.iOS){
+      //TODO 添加ios WebView
     }
 
   }
@@ -51,7 +52,7 @@ class _X5WebViewState extends State<X5WebView> {
     if(widget.onWebViewCreated==null){
       return;
     }
-    final WebViewController controller = WebViewController._(id,widget);
+    final X5WebViewController controller = X5WebViewController._(id,widget);
     widget.onWebViewCreated(controller);
   }
 
@@ -59,10 +60,10 @@ class _X5WebViewState extends State<X5WebView> {
 
 
 
-class WebViewController {
+class X5WebViewController {
   X5WebView _widget;
 
-  WebViewController._(int id,this._widget,)
+  X5WebViewController._(int id,this._widget,)
       : _channel = MethodChannel('com.cjx/x5WebView_$id'){
     _channel.setMethodCallHandler(_onMethodCall);
   }
