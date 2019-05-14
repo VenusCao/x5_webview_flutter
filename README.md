@@ -1,10 +1,10 @@
 # x5_webview
 
-基于腾讯x5引擎的webview，暂时只支持android使用
+一个基于腾讯x5引擎的webview的flutter插件，暂时只支持android使用
 
 ## x5内核介绍
 
-[x5内核](https://x5.tencent.com/tbs/product/tbs.html)，腾讯为改善移动端web体验的一种内核架构。
+[x5内核](https://x5.tencent.com/tbs/product/tbs.html)，腾讯为改善移动端web体验的一种内核架构。加载更快，更省流量，视频播放优化，文件助手等等
 
 ## 快速集成
 
@@ -72,8 +72,8 @@ X5Sdk.openWebActivity("https://www.baidu.com",title: "web页面");
 
 
 ## 注意事项
-* 该插件暂时只支持Android手机，IOS会使用无效。ios可使用[webview_flutter](https://pub.flutter-io.cn/packages/webview_flutter)
-* 一般手机安装了QQ，微信，QQ浏览器等软件，手机里自动会有X5内核。详细配置可用手机打开以下链接查看X5内核的详情
+* 该插件暂时只支持Android手机，IOS会使用无效。ios可使用[webview_flutter](https://pub.flutter-io.cn/packages/webview_flutter)或其他已实现IOS WXWebView插件
+* 一般手机安装了QQ，微信，QQ浏览器等软件，手机里自动会有X5内核，如果没有X5内核会在wifi下自动下载，[官网说明](https://x5.tencent.com/tbs/technical.html#/list/sdk/916172a5-f14e-40ed-9915-eaf74e9acba8/%E5%8A%A0%E8%BD%BD%E7%B1%BB)。详细配置可用手机打开以下链接查看X5内核的详情
     ```
     http://debugtbs.qq.com
     ```

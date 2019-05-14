@@ -64,7 +64,7 @@ class _HomePageState extends State<HomePage> {
             RaisedButton(
                 onPressed: () async {
                   X5Sdk.openWebActivity(
-                      "https://ifeng.com-l-ifeng.com/20180528/7391_46b6cf3b/index.m3u8",
+                      "https://www.baidu.com",
                       title: "web页面");
                 },
                 child: Text("x5webviewActivity")),

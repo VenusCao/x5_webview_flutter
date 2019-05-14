@@ -1,7 +1,7 @@
 name: x5_webview
-description: A new Flutter plugin.
+description: A Webview Flutter plugin of Tencent X5 Kernel
 version: 0.0.1
-author:
+author: caojinxing
 homepage:
 
 environment:
