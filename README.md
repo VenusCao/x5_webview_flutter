@@ -1,4 +1,4 @@
-# x5_webview
+# x5_webview   [![pub package](https://img.shields.io/pub/v/x5_webview.svg)](https://pub.flutter-io.cn/packages/x5_webview)
 
 一个基于腾讯x5引擎的webview的flutter插件，暂时只支持android使用
 
@@ -7,6 +7,14 @@
 [x5内核](https://x5.tencent.com/tbs/product/tbs.html)，腾讯为改善移动端web体验的一种内核架构。加载更快，更省流量，视频播放优化，文件助手等等
 
 ## 快速集成
+[![pub package](https://img.shields.io/pub/v/x5_webview.svg)](https://pub.flutter-io.cn/packages/x5_webview)
+
+pubspec.yaml文件添加
+```
+dependencies:
+  x5_webview: ^0.0.1 //最新版本见上方
+```
+
 
 在启动时，初始化x5
 ```

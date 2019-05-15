@@ -44,6 +44,9 @@ class _X5WebViewState extends State<X5WebView> {
       );
     }else if(defaultTargetPlatform == TargetPlatform.iOS){
       //TODO 添加ios WebView
+      return Container();
+    }else{
+      return Container();
     }
 
   }

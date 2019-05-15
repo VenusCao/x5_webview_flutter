@@ -1,6 +1,5 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:x5_webview/x5_sdk.dart';
 
 void main() {
   const MethodChannel channel = MethodChannel('x5_webview');

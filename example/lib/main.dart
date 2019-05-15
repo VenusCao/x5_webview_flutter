@@ -46,7 +46,7 @@ class _HomePageState extends State<HomePage> {
                 onPressed: () async {
                   var canUseTbsPlayer = await X5Sdk.canUseTbsPlayer();
                   if (canUseTbsPlayer) {
-                    var isOk = await X5Sdk.openVideo(
+                    await X5Sdk.openVideo(
                         "https://ifeng.com-l-ifeng.com/20180528/7391_46b6cf3b/index.m3u8");
                   } else {
                     print("x5Video不可用");
