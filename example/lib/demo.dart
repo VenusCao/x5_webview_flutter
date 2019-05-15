@@ -1,8 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:x5_webview/x5_webview.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 
 class DemoWebViewPage extends StatefulWidget {
   @override
@@ -11,7 +9,6 @@ class DemoWebViewPage extends StatefulWidget {
 
 class _DemoWebViewPageState extends State<DemoWebViewPage> {
   X5WebViewController _controller;
-  WebViewController _otherController;
 
   @override
   Widget build(BuildContext context) {
@@ -36,16 +33,17 @@ class _DemoWebViewPageState extends State<DemoWebViewPage> {
             )
           :
           //可替换为其他已实现ios webview,此处使用webview_flutter
-          WebView(
-              initialUrl: "https://www.baidu.com",
-              javascriptMode: JavascriptMode.unrestricted,
-              onWebViewCreated: (control) {
-                _otherController = control;
-                var body = _otherController
-                    .evaluateJavascript('document.body.innerHTML');
-                print(body);
-              },
-            ),
+      Container()
+//          WebView(
+//              initialUrl: "https://www.baidu.com",
+//              javascriptMode: JavascriptMode.unrestricted,
+//              onWebViewCreated: (control) {
+//                _otherController = control;
+//                var body = _otherController
+//                    .evaluateJavascript('document.body.innerHTML');
+//                print(body);
+//              },
+//            ),
     );
   }
 }

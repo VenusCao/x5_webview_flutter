@@ -61,7 +61,7 @@ return Scaffold(
     "https://ifeng.com-l-ifeng.com/20180528/7391_46b6cf3b/index.m3u8");
  } else {
      print("x5Video不可用");
-  }
+ }
 ```
 
 如果你只是想要简单的展示web页面，可使用以下代码直接打开一个webActivity，

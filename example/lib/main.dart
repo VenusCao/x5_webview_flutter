@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:x5_webview/x5_sdk.dart';
-import 'package:x5_webview_example/demo.dart';
+
+import 'demo.dart';
 
 void main() async {
   var isOK=await X5Sdk.init();
