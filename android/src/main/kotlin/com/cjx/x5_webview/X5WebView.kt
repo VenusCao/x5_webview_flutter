@@ -1,8 +1,6 @@
 package com.cjx.x5_webview
 
-import android.app.Activity
 import android.content.Context
-import android.util.Log
 import android.view.View
 import com.tencent.smtt.export.external.interfaces.IX5WebChromeClient
 import com.tencent.smtt.export.external.interfaces.WebResourceRequest
@@ -20,11 +18,6 @@ class X5WebView(private val context: Context, val id: Int, val params: Map<Strin
 
     init {
         channel.setMethodCallHandler(this)
-        if(context is Activity){
-            Log.e("caojinxing","是Activity")
-        }else{
-            Log.e("caojinxing","不是Activity是$context")
-        }
         webView = WebView(context)
         webView.apply {
             settings.javaScriptEnabled = params["javaScriptEnabled"] as Boolean
@@ -85,7 +78,7 @@ class X5WebView(private val context: Context, val id: Int, val params: Map<Strin
             "loadUrl" -> {
                 val arg = call.arguments as Map<String, Any>
                 val url = arg["url"].toString()
-                val headers = arg["headers"] as Map<String, String>
+                val headers = arg["headers"] as? Map<String, String>
                 webView.loadUrl(url,headers)
                 result.success(null)
             }

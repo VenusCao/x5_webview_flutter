@@ -48,4 +48,21 @@ class X5WebViewActivity:Activity() {
 
         return super.onOptionsItemSelected(item)
     }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        webView?.destroy()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        webView?.onPause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        webView?.onResume()
+    }
+
 }

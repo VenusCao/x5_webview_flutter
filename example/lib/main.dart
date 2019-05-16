@@ -5,8 +5,8 @@ import 'package:x5_webview/x5_sdk.dart';
 import 'demo.dart';
 
 void main() async {
-  var isOK=await X5Sdk.init();
-  print(isOK?"X5内核成功加载":"X5内核加载失败");
+  var isOK = await X5Sdk.init();
+  print(isOK ? "X5内核成功加载" : "X5内核加载失败");
   runApp(MyApp());
 }
 
@@ -46,8 +46,12 @@ class _HomePageState extends State<HomePage> {
                 onPressed: () async {
                   var canUseTbsPlayer = await X5Sdk.canUseTbsPlayer();
                   if (canUseTbsPlayer) {
-                    await X5Sdk.openVideo(
-                        "https://ifeng.com-l-ifeng.com/20180528/7391_46b6cf3b/index.m3u8");
+                    showInputDialog(
+                        onConfirm: (url) async {
+                          await X5Sdk.openVideo(url);
+                        },
+                        defaultText:
+                            "https://youku.com-l-youku.com/20181221/5625_d9733a43/index.m3u8");
                   } else {
                     print("x5Video不可用");
                   }
@@ -63,9 +67,12 @@ class _HomePageState extends State<HomePage> {
                 child: Text("flutter内嵌x5webview")),
             RaisedButton(
                 onPressed: () async {
-                  X5Sdk.openWebActivity(
-                      "https://www.baidu.com",
-                      title: "web页面");
+                  showInputDialog(
+                      onConfirm: (url) async {
+                        await X5Sdk.openWebActivity("https://www.baidu.com",
+                            title: "web页面");
+                      },
+                      defaultText: "https://www.baidu.com");
                 },
                 child: Text("x5webviewActivity")),
           ],
@@ -73,4 +80,33 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
+  void showInputDialog(
+      {@required ConfirmCallBack onConfirm, String defaultText = ""}) {
+    final _controller = TextEditingController(text: defaultText);
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text("输入链接测试"),
+            content: TextField(
+              controller: _controller,
+            ),
+            actions: <Widget>[
+              FlatButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text("取消")),
+              FlatButton(
+                  onPressed: () async {
+                    onConfirm(_controller.text);
+                  },
+                  child: Text("跳转"))
+            ],
+          );
+        });
+  }
 }
+
+typedef ConfirmCallBack = Function(String url);
