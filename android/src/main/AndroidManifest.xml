@@ -11,6 +11,7 @@
             android:exported="false"
             android:launchMode="singleTask"
             android:alwaysRetainTaskState="true"
+            android:windowSoftInputMode="stateHidden|adjustResize"
             ></activity>
         <activity
             android:name="com.tencent.smtt.sdk.VideoActivity"

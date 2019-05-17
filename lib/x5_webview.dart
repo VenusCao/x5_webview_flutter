@@ -8,12 +8,14 @@ typedef void X5WebViewCreatedCallback(X5WebViewController controller);
 typedef void PageFinishedCallback();
 typedef void ShowCustomViewCallback();
 typedef void HideCustomViewCallback();
+typedef void ProgressChangedCallback(int progress);
 class X5WebView extends StatefulWidget {
   final url;
   final X5WebViewCreatedCallback onWebViewCreated;
   final PageFinishedCallback onPageFinished;
   final ShowCustomViewCallback onShowCustomView;
   final HideCustomViewCallback onHideCustomView;
+  final ProgressChangedCallback onProgressChanged;
   final bool javaScriptEnabled;
   const X5WebView({
     Key key,
@@ -23,6 +25,7 @@ class X5WebView extends StatefulWidget {
     this.onPageFinished,
     this.onShowCustomView,
     this.onHideCustomView,
+    this.onProgressChanged,
   }) :super(key: key);
 
 
@@ -128,6 +131,12 @@ class X5WebViewController {
       case "onHideCustomView":
         if(_widget.onHideCustomView!=null){
           _widget.onHideCustomView();
+        }
+        break;
+      case "onProgressChanged":
+        if (_widget.onProgressChanged != null) {
+          Map arg = call.arguments;
+          _widget.onProgressChanged(arg["progress"]);
         }
         break;
       default :

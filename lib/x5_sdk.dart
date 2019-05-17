@@ -15,6 +15,7 @@ class X5Sdk {
     }
   }
 
+  ///加载内核，没有内核会自动下载
   static Future<bool> init() async {
     if (defaultTargetPlatform == TargetPlatform.android) {
       bool res = await _channel.invokeMethod("init");
@@ -24,6 +25,7 @@ class X5Sdk {
     }
   }
 
+  ///screenMode 播放参数，103横屏全屏，104竖屏全屏。默认103
   static Future<void> openVideo(String url, {int screenMode}) async {
     if (defaultTargetPlatform == TargetPlatform.android) {
       final Map<String, dynamic> params = <String, dynamic>{

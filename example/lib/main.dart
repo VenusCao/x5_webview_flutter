@@ -4,9 +4,10 @@ import 'package:x5_webview/x5_sdk.dart';
 
 import 'demo.dart';
 
-void main() async {
-  var isOK = await X5Sdk.init();
-  print(isOK ? "X5内核成功加载" : "X5内核加载失败");
+void main() {
+  X5Sdk.init().then((isOK) {
+    print(isOK ? "X5内核成功加载" : "X5内核加载失败");
+  });
   runApp(MyApp());
 }
 
@@ -44,6 +45,12 @@ class _HomePageState extends State<HomePage> {
           children: <Widget>[
             RaisedButton(
                 onPressed: () async {
+                  X5Sdk.openWebActivity("http://debugtbs.qq.com",
+                      title: "X5内核信息");
+                },
+                child: Text("查看X5内核信息")),
+            RaisedButton(
+                onPressed: () async {
                   var canUseTbsPlayer = await X5Sdk.canUseTbsPlayer();
                   if (canUseTbsPlayer) {
                     showInputDialog(
@@ -59,18 +66,21 @@ class _HomePageState extends State<HomePage> {
                 child: Text("x5video直接播放视频")),
             RaisedButton(
                 onPressed: () async {
-                  Navigator.of(context)
-                      .push(CupertinoPageRoute(builder: (BuildContext context) {
-                    return DemoWebViewPage();
-                  }));
+                  showInputDialog(
+                      onConfirm: (url) {
+                        Navigator.of(context).push(
+                            CupertinoPageRoute(builder: (BuildContext context) {
+                              return DemoWebViewPage(url);
+                            }));
+                      },
+                      defaultText: "https://www.baidu.com");
                 },
                 child: Text("flutter内嵌x5webview")),
             RaisedButton(
                 onPressed: () async {
                   showInputDialog(
                       onConfirm: (url) async {
-                        await X5Sdk.openWebActivity("https://www.baidu.com",
-                            title: "web页面");
+                        await X5Sdk.openWebActivity(url, title: "web页面");
                       },
                       defaultText: "https://www.baidu.com");
                 },
@@ -100,6 +110,7 @@ class _HomePageState extends State<HomePage> {
                   child: Text("取消")),
               FlatButton(
                   onPressed: () async {
+                    Navigator.pop(context);
                     onConfirm(_controller.text);
                   },
                   child: Text("跳转"))

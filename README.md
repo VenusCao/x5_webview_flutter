@@ -18,9 +18,10 @@ dependencies:
 
 在启动时，初始化x5
 ```
-void main() async {
-  var isOK=await X5Sdk.init();
-  print(isOK?"X5内核成功加载":"X5内核加载失败");
+void main() {
+  X5Sdk.init().then((isOK) {
+    print(isOK ? "X5内核成功加载" : "X5内核加载失败");
+  });
   runApp(MyApp());
 }
 ```
@@ -81,7 +82,7 @@ X5Sdk.openWebActivity("https://www.baidu.com",title: "web页面");
 
 ## 注意事项
 * 该插件暂时只支持Android手机，IOS会使用无效。ios可使用[webview_flutter](https://pub.flutter-io.cn/packages/webview_flutter)或其他已实现IOS WXWebView插件
-* 一般手机安装了QQ，微信，QQ浏览器等软件，手机里自动会有X5内核，如果没有X5内核会在wifi下自动下载，[官网说明](https://x5.tencent.com/tbs/technical.html#/list/sdk/916172a5-f14e-40ed-9915-eaf74e9acba8/%E5%8A%A0%E8%BD%BD%E7%B1%BB)。详细配置可用手机打开以下链接查看X5内核的详情
+* 一般手机安装了QQ，微信，QQ浏览器等软件，手机里自动会有X5内核，如果没有X5内核会在wifi下自动下载，X5内核没有加载成功会自动使用系统内核[官网说明](https://x5.tencent.com/tbs/technical.html#/list/sdk/916172a5-f14e-40ed-9915-eaf74e9acba8/%E5%8A%A0%E8%BD%BD%E7%B1%BB)。详细配置可用手机打开以下链接查看X5内核的详情
     ```
     http://debugtbs.qq.com
     ```
@@ -92,3 +93,8 @@ X5Sdk.openWebActivity("https://www.baidu.com",title: "web页面");
     ```
     --target-platform android-arm
     ```
+## 示例程序下载
+
+[apk下载](https://www.pgyer.com/x5_webview)
+
+![二维码](https://www.pgyer.com/app/qrcode/x5_webview)

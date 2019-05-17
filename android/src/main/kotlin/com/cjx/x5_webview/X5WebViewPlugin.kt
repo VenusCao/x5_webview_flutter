@@ -1,11 +1,5 @@
 package com.cjx.x5_webview
 
-import android.app.Activity
-import android.content.Context
-import android.content.Intent
-import android.os.Bundle
-import com.tencent.smtt.sdk.QbSdk
-import com.tencent.smtt.sdk.TbsVideo
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
@@ -64,11 +58,5 @@ class X5WebViewPlugin(var context: Context,var activity:Activity): MethodCallHan
         result.notImplemented()
       }
     }
-
-//    if (call.method == "getPlatformVersion") {
-//      result.success("Android ${android.os.Build.VERSION.RELEASE}")
-//    } else {
-//      result.notImplemented()
-//    }
   }
 }

@@ -1,17 +1,10 @@
 package com.cjx.x5_webview
 
-import android.app.Activity
-import android.os.Bundle
-import android.view.MenuItem
-import android.widget.FrameLayout
-import com.tencent.smtt.export.external.interfaces.WebResourceRequest
-import com.tencent.smtt.sdk.WebView
-import com.tencent.smtt.sdk.WebViewClient
-
 class X5WebViewActivity:Activity() {
     var webView:WebView?=null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        window.setFormat(PixelFormat.TRANSLUCENT)
         webView=WebView(this)
         setContentView(webView)
 
