@@ -1,7 +1,16 @@
 package com.cjx.x5_webview
 
-class X5WebViewActivity:Activity() {
-    var webView:WebView?=null
+import android.app.Activity
+import android.graphics.PixelFormat
+import android.os.Bundle
+import android.view.MenuItem
+import android.widget.FrameLayout
+import com.tencent.smtt.export.external.interfaces.WebResourceRequest
+import com.tencent.smtt.sdk.WebView
+import com.tencent.smtt.sdk.WebViewClient
+
+class X5WebViewActivity : Activity() {
+    var webView: WebView? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.setFormat(PixelFormat.TRANSLUCENT)
@@ -15,7 +24,7 @@ class X5WebViewActivity:Activity() {
         actionBar.setDisplayHomeAsUpEnabled(true)
         title=intent.getStringExtra("title")?:""
         webView?.apply {
-            layoutParams=FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,FrameLayout.LayoutParams.MATCH_PARENT)
+            layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT)
             loadUrl(intent.getStringExtra("url"))
             settings.javaScriptEnabled=true
             webViewClient= object : WebViewClient() {
