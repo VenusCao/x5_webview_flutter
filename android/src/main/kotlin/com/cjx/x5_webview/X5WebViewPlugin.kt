@@ -13,56 +13,56 @@ import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugin.common.PluginRegistry.Registrar
 
 class X5WebViewPlugin(var context: Context, var activity: Activity) : MethodCallHandler {
-  companion object {
-    @JvmStatic
-    fun registerWith(registrar: Registrar) {
-      val channel = MethodChannel(registrar.messenger(), "com.cjx/x5Video")
-      channel.setMethodCallHandler(X5WebViewPlugin(registrar.context(),registrar.activity()))
+    companion object {
+        @JvmStatic
+        fun registerWith(registrar: Registrar) {
+            val channel = MethodChannel(registrar.messenger(), "com.cjx/x5Video")
+            channel.setMethodCallHandler(X5WebViewPlugin(registrar.context(), registrar.activity()))
 
-      registrar.platformViewRegistry().registerViewFactory("com.cjx/x5WebView",X5WebViewFactory(registrar.messenger(),registrar.activeContext()))
+            registrar.platformViewRegistry().registerViewFactory("com.cjx/x5WebView", X5WebViewFactory(registrar.messenger(), registrar.activeContext()))
 
+        }
     }
-  }
 
-  override fun onMethodCall(call: MethodCall, result: Result) {
-    when(call.method){
-      "init"->{
-        QbSdk.initX5Environment(context.applicationContext, object : QbSdk.PreInitCallback {
-          override fun onCoreInitFinished() {
+    override fun onMethodCall(call: MethodCall, result: Result) {
+        when (call.method) {
+            "init" -> {
+                QbSdk.initX5Environment(context.applicationContext, object : QbSdk.PreInitCallback {
+                    override fun onCoreInitFinished() {
 
-          }
+                    }
 
-          override fun onViewInitFinished(p0: Boolean) {
-            //x5內核初始化完成的回调，为true表示x5内核加载成功，否则表示x5内核加载失败，会自动切换到系统内核。
-            result.success(p0)
-          }
+                    override fun onViewInitFinished(p0: Boolean) {
+                        //x5內核初始化完成的回调，为true表示x5内核加载成功，否则表示x5内核加载失败，会自动切换到系统内核。
+                        result.success(p0)
+                    }
 
-        })
-      }
-      "canUseTbsPlayer"->{
-        //返回是否可以使用tbsPlayer
-       result.success(TbsVideo.canUseTbsPlayer(context))
-      }
-      "openVideo"->{
-        val url=call.argument<String>("url")
-        val screenMode=call.argument<Int>("screenMode")?:103
-        val bundle = Bundle()
-        bundle.putInt("screenMode",screenMode)
-        TbsVideo.openVideo(context,url,bundle)
-      }
-      "openWebActivity"->{
-        val url=call.argument<String>("url")
-        val title=call.argument<String>("title")
-        val intent = Intent(activity, X5WebViewActivity::class.java)
-        intent.putExtra("url",url)
-        intent.putExtra("title",title)
-        activity.startActivity(intent)
-      }
+                })
+            }
+            "canUseTbsPlayer" -> {
+                //返回是否可以使用tbsPlayer
+                result.success(TbsVideo.canUseTbsPlayer(context))
+            }
+            "openVideo" -> {
+                val url = call.argument<String>("url")
+                val screenMode = call.argument<Int>("screenMode") ?: 103
+                val bundle = Bundle()
+                bundle.putInt("screenMode", screenMode)
+                TbsVideo.openVideo(context, url, bundle)
+            }
+            "openWebActivity" -> {
+                val url = call.argument<String>("url")
+                val title = call.argument<String>("title")
+                val intent = Intent(activity, X5WebViewActivity::class.java)
+                intent.putExtra("url", url)
+                intent.putExtra("title", title)
+                activity.startActivity(intent)
+            }
 
 
-      else->{
-        result.notImplemented()
-      }
+            else -> {
+                result.notImplemented()
+            }
+        }
     }
-  }
 }

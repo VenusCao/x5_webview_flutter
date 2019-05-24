@@ -9,6 +9,7 @@ typedef void PageFinishedCallback();
 typedef void ShowCustomViewCallback();
 typedef void HideCustomViewCallback();
 typedef void ProgressChangedCallback(int progress);
+
 class X5WebView extends StatefulWidget {
   final url;
   final X5WebViewCreatedCallback onWebViewCreated;
@@ -17,18 +18,17 @@ class X5WebView extends StatefulWidget {
   final HideCustomViewCallback onHideCustomView;
   final ProgressChangedCallback onProgressChanged;
   final bool javaScriptEnabled;
+
   const X5WebView({
     Key key,
     this.url,
-    this.javaScriptEnabled=false,
+    this.javaScriptEnabled = false,
     this.onWebViewCreated,
     this.onPageFinished,
     this.onShowCustomView,
     this.onHideCustomView,
     this.onProgressChanged,
-  }) :super(key: key);
-
-
+  }) : super(key: key);
 
   @override
   _X5WebViewState createState() => _X5WebViewState();
@@ -45,38 +45,34 @@ class _X5WebViewState extends State<X5WebView> {
         creationParams: _CreationParams.fromWidget(widget).toMap(),
         layoutDirection: TextDirection.rtl,
       );
-    }else if(defaultTargetPlatform == TargetPlatform.iOS){
+    } else if (defaultTargetPlatform == TargetPlatform.iOS) {
       //TODO 添加ios WebView
       return Container();
-    }else{
+    } else {
       return Container();
     }
-
   }
 
   void _onPlatformViewCreated(int id) {
-    if(widget.onWebViewCreated==null){
+    if (widget.onWebViewCreated == null) {
       return;
     }
-    final X5WebViewController controller = X5WebViewController._(id,widget);
+    final X5WebViewController controller = X5WebViewController._(id, widget);
     widget.onWebViewCreated(controller);
   }
-
 }
-
-
 
 class X5WebViewController {
   X5WebView _widget;
 
-  X5WebViewController._(int id,this._widget,)
-      : _channel = MethodChannel('com.cjx/x5WebView_$id'){
+  X5WebViewController._(int id,
+      this._widget,) : _channel = MethodChannel('com.cjx/x5WebView_$id') {
     _channel.setMethodCallHandler(_onMethodCall);
   }
 
   final MethodChannel _channel;
 
-  Future<void> loadUrl(String url,{Map<String, String> headers}) async {
+  Future<void> loadUrl(String url, {Map<String, String> headers}) async {
     assert(url != null);
     return _channel.invokeMethod('loadUrl', {
       'url': url,
@@ -90,6 +86,7 @@ class X5WebViewController {
       'js': js,
     });
   }
+
   Future<void> goBackOrForward(int i) async {
     assert(i != null);
     return _channel.invokeMethod('evaluateJavascript', {
@@ -97,39 +94,44 @@ class X5WebViewController {
     });
   }
 
-  Future<bool> canGoBack()async{
+  Future<bool> canGoBack() async {
     return _channel.invokeMethod('canGoBack');
   }
-  Future<bool> canGoForward()async{
+
+  Future<bool> canGoForward() async {
     return _channel.invokeMethod('canGoForward');
   }
-  Future<void> goBack()async{
+
+  Future<void> goBack() async {
     return _channel.invokeMethod('goBack');
   }
-  Future<void> goForward()async{
+
+  Future<void> goForward() async {
     return _channel.invokeMethod('goForward');
   }
-  Future<void> reload()async{
+
+  Future<void> reload() async {
     return _channel.invokeMethod('reload');
   }
-  Future<String> currentUrl()async{
+
+  Future<String> currentUrl() async {
     return _channel.invokeMethod('currentUrl');
   }
 
-  Future _onMethodCall(MethodCall call) async{
-    switch(call.method){
+  Future _onMethodCall(MethodCall call) async {
+    switch (call.method) {
       case "onPageFinished":
-        if(_widget.onPageFinished!=null){
+        if (_widget.onPageFinished != null) {
           _widget.onPageFinished();
         }
         break;
       case "onShowCustomView":
-        if(_widget.onShowCustomView!=null){
+        if (_widget.onShowCustomView != null) {
           _widget.onShowCustomView();
         }
         break;
       case "onHideCustomView":
-        if(_widget.onHideCustomView!=null){
+        if (_widget.onHideCustomView != null) {
           _widget.onHideCustomView();
         }
         break;
@@ -139,7 +141,7 @@ class X5WebViewController {
           _widget.onProgressChanged(arg["progress"]);
         }
         break;
-      default :
+      default:
         throw MissingPluginException(
             '${call.method} was invoked but has no handler');
         break;
@@ -147,20 +149,17 @@ class X5WebViewController {
   }
 }
 
-
 class _CreationParams {
-  _CreationParams(
-      {this.url, this.javaScriptEnabled});
+  _CreationParams({this.url, this.javaScriptEnabled});
 
   static _CreationParams fromWidget(X5WebView widget) {
     return _CreationParams(
-      url: widget.url,
-        javaScriptEnabled:widget.javaScriptEnabled
-    );
+        url: widget.url, javaScriptEnabled: widget.javaScriptEnabled);
   }
 
   final String url;
   final bool javaScriptEnabled;
+
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'url': url,

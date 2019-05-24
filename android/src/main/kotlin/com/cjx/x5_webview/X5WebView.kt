@@ -22,7 +22,7 @@ class X5WebView(private val context: Context, val id: Int, val params: Map<Strin
         webView.apply {
             settings.javaScriptEnabled = params["javaScriptEnabled"] as Boolean
             loadUrl(params["url"].toString())
-            webViewClient= object : WebViewClient() {
+            webViewClient = object : WebViewClient() {
                 override fun shouldOverrideUrlLoading(view: WebView, url: String?): Boolean {
                     view.loadUrl(url)
                     return super.shouldOverrideUrlLoading(view, url)
@@ -36,29 +36,29 @@ class X5WebView(private val context: Context, val id: Int, val params: Map<Strin
                 override fun onPageFinished(p0: WebView?, url: String) {
                     super.onPageFinished(p0, url)
                     //向flutter通信
-                    val arg=hashMapOf<String,Any>()
-                    arg["url"]=url
-                    channel.invokeMethod("onPageFinished",arg)
+                    val arg = hashMapOf<String, Any>()
+                    arg["url"] = url
+                    channel.invokeMethod("onPageFinished", arg)
                 }
 
             }
-            webChromeClient= object : WebChromeClient() {
+            webChromeClient = object : WebChromeClient() {
                 override fun onShowCustomView(view: View?, call: IX5WebChromeClient.CustomViewCallback?) {
                     super.onShowCustomView(view, call)
-                    channel.invokeMethod("onShowCustomView",null)
+                    channel.invokeMethod("onShowCustomView", null)
                 }
 
                 override fun onHideCustomView() {
                     super.onHideCustomView()
-                    channel.invokeMethod("onHideCustomView",null)
+                    channel.invokeMethod("onHideCustomView", null)
                 }
 
                 override fun onProgressChanged(p0: WebView?, p1: Int) {
                     super.onProgressChanged(p0, p1)
                     //加载进度
-                    val arg=hashMapOf<String,Any>()
-                    arg["progress"]=p1
-                    channel.invokeMethod("onProgressChanged",arg)
+                    val arg = hashMapOf<String, Any>()
+                    arg["progress"] = p1
+                    channel.invokeMethod("onProgressChanged", arg)
                 }
             }
 
@@ -79,7 +79,7 @@ class X5WebView(private val context: Context, val id: Int, val params: Map<Strin
                 val arg = call.arguments as Map<String, Any>
                 val url = arg["url"].toString()
                 val headers = arg["headers"] as? Map<String, String>
-                webView.loadUrl(url,headers)
+                webView.loadUrl(url, headers)
                 result.success(null)
             }
             "canGoBack" -> {
@@ -98,7 +98,7 @@ class X5WebView(private val context: Context, val id: Int, val params: Map<Strin
             }
             "goBackOrForward" -> {
                 val arg = call.arguments as Map<String, Any>
-                val point=arg["i"] as Int
+                val point = arg["i"] as Int
                 webView.goBackOrForward(point)
                 result.success(null)
             }
@@ -111,10 +111,10 @@ class X5WebView(private val context: Context, val id: Int, val params: Map<Strin
             }
             "evaluateJavascript" -> {
                 val arg = call.arguments as Map<String, Any>
-                val js=arg["js"].toString()
+                val js = arg["js"].toString()
                 webView.evaluateJavascript(js) { value -> result.success(value) }
             }
-            else->{
+            else -> {
                 result.notImplemented()
             }
         }

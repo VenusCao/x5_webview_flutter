@@ -14,7 +14,7 @@ class X5WebViewActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.setFormat(PixelFormat.TRANSLUCENT)
-        webView=WebView(this)
+        webView = WebView(this)
         setContentView(webView)
 
         initView()
@@ -22,12 +22,12 @@ class X5WebViewActivity : Activity() {
 
     private fun initView() {
         actionBar.setDisplayHomeAsUpEnabled(true)
-        title=intent.getStringExtra("title")?:""
+        title = intent.getStringExtra("title") ?: ""
         webView?.apply {
             layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT)
             loadUrl(intent.getStringExtra("url"))
-            settings.javaScriptEnabled=true
-            webViewClient= object : WebViewClient() {
+            settings.javaScriptEnabled = true
+            webViewClient = object : WebViewClient() {
                 override fun shouldOverrideUrlLoading(view: WebView, url: String?): Boolean {
                     view.loadUrl(url)
                     return super.shouldOverrideUrlLoading(view, url)
@@ -42,8 +42,8 @@ class X5WebViewActivity : Activity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
-            android.R.id.home->{
+        when (item.itemId) {
+            android.R.id.home -> {
                 finish()
             }
         }
