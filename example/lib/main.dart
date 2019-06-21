@@ -58,7 +58,7 @@ class _HomePageState extends State<HomePage> {
                           await X5Sdk.openVideo(url);
                         },
                         defaultText:
-                            "https://youku.com-l-youku.com/20181221/5625_d9733a43/index.m3u8");
+                        "https://youku.com-l-youku.com/20181221/5625_d9733a43/index.m3u8");
                   } else {
                     print("x5Video不可用");
                   }
@@ -66,6 +66,11 @@ class _HomePageState extends State<HomePage> {
                 child: Text("x5video直接播放视频")),
             RaisedButton(
                 onPressed: () async {
+//                                          Navigator.of(context).push(
+//                            CupertinoPageRoute(builder: (BuildContext context) {
+//                              return DemoWebViewPage("http://bin.amazeui.org/tizayo");
+//                            }));
+
                   showInputDialog(
                       onConfirm: (url) {
                         Navigator.of(context).push(
@@ -73,7 +78,7 @@ class _HomePageState extends State<HomePage> {
                               return DemoWebViewPage(url);
                             }));
                       },
-                      defaultText: "https://www.baidu.com");
+                      defaultText: "http://bin.amazeui.org/tizayo");
                 },
                 child: Text("flutter内嵌x5webview")),
             RaisedButton(

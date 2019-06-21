@@ -9,6 +9,7 @@ typedef void PageFinishedCallback();
 typedef void ShowCustomViewCallback();
 typedef void HideCustomViewCallback();
 typedef void ProgressChangedCallback(int progress);
+typedef void MessageReceived(String name,String data);
 
 class X5WebView extends StatefulWidget {
   final url;
@@ -19,16 +20,15 @@ class X5WebView extends StatefulWidget {
   final ProgressChangedCallback onProgressChanged;
   final bool javaScriptEnabled;
 
-  const X5WebView({
-    Key key,
+  const X5WebView({Key key,
     this.url,
     this.javaScriptEnabled = false,
     this.onWebViewCreated,
     this.onPageFinished,
     this.onShowCustomView,
     this.onHideCustomView,
-    this.onProgressChanged,
-  }) : super(key: key);
+    this.onProgressChanged})
+      : super(key: key);
 
   @override
   _X5WebViewState createState() => _X5WebViewState();
@@ -87,9 +87,21 @@ class X5WebViewController {
     });
   }
 
+  Future<void> addJavascriptChannels(List<String> names,MessageReceived callback) async {
+    assert(names != null);
+    await _channel.invokeMethod("addJavascriptChannels", {'names': names});
+    _channel.setMethodCallHandler((call) {
+      if (call.method == "onJavascriptChannelCallBack") {
+        Map arg = call.arguments;
+        callback(arg["name"],arg["msg"]);
+      }
+      return;
+    });
+  }
+
   Future<void> goBackOrForward(int i) async {
     assert(i != null);
-    return _channel.invokeMethod('evaluateJavascript', {
+    return _channel.invokeMethod('goBackOrForward', {
       'i': i,
     });
   }
@@ -150,7 +162,7 @@ class X5WebViewController {
 }
 
 class _CreationParams {
-  _CreationParams({this.url, this.javaScriptEnabled});
+  _CreationParams({this.url, this.javaScriptEnabled, this.jsChannelName});
 
   static _CreationParams fromWidget(X5WebView widget) {
     return _CreationParams(
@@ -159,11 +171,13 @@ class _CreationParams {
 
   final String url;
   final bool javaScriptEnabled;
+  final String jsChannelName;
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'url': url,
       'javaScriptEnabled': javaScriptEnabled,
+      "jsChannelName": jsChannelName
     };
   }
 }

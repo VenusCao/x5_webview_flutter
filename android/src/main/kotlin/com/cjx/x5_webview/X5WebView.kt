@@ -21,6 +21,7 @@ class X5WebView(private val context: Context, val id: Int, val params: Map<Strin
         webView = WebView(context)
         webView.apply {
             settings.javaScriptEnabled = params["javaScriptEnabled"] as Boolean
+            settings.domStorageEnabled=true
             loadUrl(params["url"].toString())
             webViewClient = object : WebViewClient() {
                 override fun shouldOverrideUrlLoading(view: WebView, url: String?): Boolean {
@@ -114,6 +115,18 @@ class X5WebView(private val context: Context, val id: Int, val params: Map<Strin
                 val js = arg["js"].toString()
                 webView.evaluateJavascript(js) { value -> result.success(value) }
             }
+
+            "addJavascriptChannels"->{
+                val arg = call.arguments as Map<String, Any>
+                val names = arg["names"] as List<String>
+                for(name in names){
+                    webView.addJavascriptInterface(JavascriptChannel(name,channel,context),name)
+                }
+                webView.reload()
+                result.success(null)
+
+            }
+
             else -> {
                 result.notImplemented()
             }

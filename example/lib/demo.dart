@@ -35,35 +35,61 @@ class _DemoWebViewPageState extends State<DemoWebViewPage> {
             Expanded(
                 child: defaultTargetPlatform == TargetPlatform.android
                     ? X5WebView(
-                  url: url,
-                  javaScriptEnabled: true,
-                  onWebViewCreated: (control) {
-                    _controller = control;
-                  },
-                  onPageFinished: () async {
-                    var url = await _controller.currentUrl();
-                    print(url);
-                    var body = await _controller
-                        .evaluateJavascript('document.body.innerHTML');
-                    print(body);
-                  },
-                  onProgressChanged: (progress) {
-                    print("webview加载进度------$progress");
-                  },
-                )
+                        url: url,
+                        javaScriptEnabled: true,
+                        onWebViewCreated: (control) {
+                          _controller = control;
+                        },
+                        onPageFinished: () async {
+                          var url = await _controller.currentUrl();
+                          print(url);
+                          var listName=["X5Web","Toast"];
+                          _controller.addJavascriptChannels(listName, (name,data) {
+                            switch(name){
+                              case "X5Web":
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: Text("获取到的字符串为："),
+                                        content: Text(data),
+                                      );
+                                    });
+                                break;
+                              case "Toast":
+                                print(data);
+                                break;
+                            }
+
+                          });
+                        },
+                        onProgressChanged: (progress) {
+                          print("webview加载进度------$progress");
+                        },
+                      )
                     :
-                //可替换为其他已实现ios webview,此处使用webview_flutter
-                Container()
+                    //可替换为其他已实现ios webview,此处使用webview_flutter
+                    Container()
 //          WebView(
 //              initialUrl: "https://www.baidu.com",
 //              javascriptMode: JavascriptMode.unrestricted,
+//              javascriptChannels: [JavascriptChannel(name: "x5Web", onMessageReceived: (msg){
+//                print(msg);
+//              })].toSet(),
 //              onWebViewCreated: (control) {
-//                _otherController = control;
-//                var body = _otherController
-//                    .evaluateJavascript('document.body.innerHTML');
-//                print(body);
+////                _otherController = control;
+////                var body = _otherController
+////                    .evaluateJavascript('document.body.innerHTML');
+////                print(body);
 //              },
 //            )
+                ),
+            RaisedButton(
+              onPressed: () {
+                _controller.evaluateJavascript(
+                    'document.getElementById("input").value="flutter调用js成功！"');
+              },
+              child: Text("flutter调用js(更改文字)"),
             )
           ]),
         ),
