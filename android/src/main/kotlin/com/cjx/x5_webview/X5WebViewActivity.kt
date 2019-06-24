@@ -4,6 +4,7 @@ import android.app.Activity
 import android.graphics.PixelFormat
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.Window
 import android.widget.FrameLayout
 import com.tencent.smtt.export.external.interfaces.WebResourceRequest
 import com.tencent.smtt.sdk.WebView
@@ -13,6 +14,7 @@ class X5WebViewActivity : Activity() {
     var webView: WebView? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        requestWindowFeature(Window.FEATURE_ACTION_BAR)
         window.setFormat(PixelFormat.TRANSLUCENT)
         webView = WebView(this)
         setContentView(webView)
@@ -21,7 +23,7 @@ class X5WebViewActivity : Activity() {
     }
 
     private fun initView() {
-        actionBar.setDisplayHomeAsUpEnabled(true)
+        actionBar?.setDisplayHomeAsUpEnabled(true)
         title = intent.getStringExtra("title") ?: ""
         webView?.apply {
             layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT)
