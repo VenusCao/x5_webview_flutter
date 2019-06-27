@@ -30,7 +30,7 @@ class X5Sdk {
   static Future<bool> setDownloadWithoutWifi(bool isDownloadWithoutWifi) async {
     if (defaultTargetPlatform == TargetPlatform.android) {
       final Map<String, dynamic> params = <String, dynamic>{
-        'isDownloadWithoutWifi': isDownloadWithoutWifi,
+        'isDownloadWithoutWifi': isDownloadWithoutWifi ?? false,
       };
 
       bool res = await _channel.invokeMethod("setDownloadWithoutWifi", params);
@@ -98,6 +98,6 @@ class X5SdkListener {
   DownloadFinish onDownloadFinish;
   DownloadProgress onDownloadProgress;
 
-  X5SdkListener(this.onInstallFinish, this.onDownloadFinish,
-      this.onDownloadProgress);
+  X5SdkListener(
+      this.onInstallFinish, this.onDownloadFinish, this.onDownloadProgress);
 }

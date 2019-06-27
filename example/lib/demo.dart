@@ -43,9 +43,10 @@ class _DemoWebViewPageState extends State<DemoWebViewPage> {
                         onPageFinished: () async {
                           var url = await _controller.currentUrl();
                           print(url);
-                          var listName=["X5Web","Toast"];
-                          _controller.addJavascriptChannels(listName, (name,data) {
-                            switch(name){
+                          var listName = ["X5Web", "Toast"];
+                          _controller.addJavascriptChannels(listName,
+                              (name, data) {
+                            switch (name) {
                               case "X5Web":
                                 showDialog(
                                     context: context,
@@ -60,7 +61,6 @@ class _DemoWebViewPageState extends State<DemoWebViewPage> {
                                 print(data);
                                 break;
                             }
-
                           });
                         },
                         onProgressChanged: (progress) {
@@ -71,9 +71,9 @@ class _DemoWebViewPageState extends State<DemoWebViewPage> {
                     //可替换为其他已实现ios webview,此处使用webview_flutter
                     Container()
 //          WebView(
-//              initialUrl: "https://www.baidu.com",
+//              initialUrl: url,
 //              javascriptMode: JavascriptMode.unrestricted,
-//              javascriptChannels: [JavascriptChannel(name: "x5Web", onMessageReceived: (msg){
+//              javascriptChannels: [JavascriptChannel(name: "X5Web", onMessageReceived: (msg){
 //                print(msg);
 //              })].toSet(),
 //              onWebViewCreated: (control) {

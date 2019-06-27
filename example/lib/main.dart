@@ -5,6 +5,7 @@ import 'package:x5_webview/x5_sdk.dart';
 import 'demo.dart';
 
 void main() {
+  X5Sdk.setDownloadWithoutWifi(true); //没有x5内核，是否在非wifi模式下载内核。默认false
   X5Sdk.init().then((isOK) {
     print(isOK ? "X5内核成功加载" : "X5内核加载失败");
   });
@@ -58,7 +59,7 @@ class _HomePageState extends State<HomePage> {
                           await X5Sdk.openVideo(url);
                         },
                         defaultText:
-                        "https://youku.com-l-youku.com/20181221/5625_d9733a43/index.m3u8");
+                            "https://youku.com-l-youku.com/20181221/5625_d9733a43/index.m3u8");
                   } else {
                     print("x5Video不可用");
                   }
@@ -75,8 +76,8 @@ class _HomePageState extends State<HomePage> {
                       onConfirm: (url) {
                         Navigator.of(context).push(
                             CupertinoPageRoute(builder: (BuildContext context) {
-                              return DemoWebViewPage(url);
-                            }));
+                          return DemoWebViewPage(url);
+                        }));
                       },
                       defaultText: "http://bin.amazeui.org/tizayo");
                 },

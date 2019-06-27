@@ -9,7 +9,7 @@ typedef void PageFinishedCallback();
 typedef void ShowCustomViewCallback();
 typedef void HideCustomViewCallback();
 typedef void ProgressChangedCallback(int progress);
-typedef void MessageReceived(String name,String data);
+typedef void MessageReceived(String name, String data);
 
 class X5WebView extends StatefulWidget {
   final url;
@@ -20,14 +20,15 @@ class X5WebView extends StatefulWidget {
   final ProgressChangedCallback onProgressChanged;
   final bool javaScriptEnabled;
 
-  const X5WebView({Key key,
-    this.url,
-    this.javaScriptEnabled = false,
-    this.onWebViewCreated,
-    this.onPageFinished,
-    this.onShowCustomView,
-    this.onHideCustomView,
-    this.onProgressChanged})
+  const X5WebView(
+      {Key key,
+      this.url,
+      this.javaScriptEnabled = false,
+      this.onWebViewCreated,
+      this.onPageFinished,
+      this.onShowCustomView,
+      this.onHideCustomView,
+      this.onProgressChanged})
       : super(key: key);
 
   @override
@@ -65,8 +66,10 @@ class _X5WebViewState extends State<X5WebView> {
 class X5WebViewController {
   X5WebView _widget;
 
-  X5WebViewController._(int id,
-      this._widget,) : _channel = MethodChannel('com.cjx/x5WebView_$id') {
+  X5WebViewController._(
+    int id,
+    this._widget,
+  ) : _channel = MethodChannel('com.cjx/x5WebView_$id') {
     _channel.setMethodCallHandler(_onMethodCall);
   }
 
@@ -87,13 +90,14 @@ class X5WebViewController {
     });
   }
 
-  Future<void> addJavascriptChannels(List<String> names,MessageReceived callback) async {
+  Future<void> addJavascriptChannels(
+      List<String> names, MessageReceived callback) async {
     assert(names != null);
     await _channel.invokeMethod("addJavascriptChannels", {'names': names});
     _channel.setMethodCallHandler((call) {
       if (call.method == "onJavascriptChannelCallBack") {
         Map arg = call.arguments;
-        callback(arg["name"],arg["msg"]);
+        callback(arg["name"], arg["msg"]);
       }
       return;
     });

@@ -23,6 +23,7 @@ class X5WebViewActivity : Activity() {
     }
 
     private fun initView() {
+        actionBar?.show()
         actionBar?.setDisplayHomeAsUpEnabled(true)
         title = intent.getStringExtra("title") ?: ""
         webView?.apply {

@@ -9,12 +9,20 @@
 ## 快速集成
 [![pub package](https://img.shields.io/pub/v/x5_webview.svg)](https://pub.flutter-io.cn/packages/x5_webview)
 
+[pub地址](https://pub.flutter-io.cn/packages/x5_webview)
+
 pubspec.yaml文件添加
 ```
 dependencies:
   x5_webview: ^0.0.1 //最新版本见上方
 ```
 
+[为兼容x64手机](https://x5.tencent.com/tbs/technical.html#/detail/sdk/1/34cf1488-7dc2-41ca-a77f-0014112bcab7)，在bulid.gradle里面的defaultConfig添加ndk支持
+```
+        ndk {
+            abiFilters "armeabi-v7a"
+        }
+```
 
 在启动时，初始化x5
 ```
@@ -61,6 +69,31 @@ return Scaffold(
             ),
     );
 ```
+内嵌webview js与flutter互调  
+  
+* flutter调用js
+```
+var body = await _controller.evaluateJavascript("document.body.innerHTML");
+```
+* js调用flutter
+```
+    var listName = ["X5Web", "Toast"];
+    _controller.addJavascriptChannels(listName, (name, data) {
+      switch (name) {
+        case "X5Web":
+          print(data);
+          break;
+        case "Toast":
+          print(data);
+          break;
+      }
+    });
+```
+* js代码
+```
+X5Web.postMessage("XXX")
+Toast.postMessage("YYY")
+```
 
 使用TBSPlayer直接播放视频
 ```
@@ -79,6 +112,7 @@ return Scaffold(
 X5Sdk.openWebActivity("https://www.baidu.com",title: "web页面");
 ```
 
+## 
 
 ## 注意事项
 * 该插件暂时只支持Android手机，IOS会使用无效。ios可使用[webview_flutter](https://pub.flutter-io.cn/packages/webview_flutter)或其他已实现IOS WXWebView插件
@@ -89,10 +123,13 @@ X5Sdk.openWebActivity("https://www.baidu.com",title: "web页面");
 
 * 请使用真机测试，模拟器可能不能正常显示
 
-* 如果运行闪退的话，请添加运行配置
+* 如果添加ndk支持后，打开app闪退请添加以下运行配置，或者使用android sdk运行。
     ```
-    --target-platform android-arm
+    flutter run --target-platform android-arm32
     ```
+    
+* 有比较急的问题可以加我QQ：793710663
+
 ## 示例程序下载
 
 [apk下载](https://www.pgyer.com/x5_webview)
