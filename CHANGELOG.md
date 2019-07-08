@@ -19,3 +19,8 @@
 * actionBar获取异常处理
 * 增加js调用flutter功能
 * 内核增加下载安装监听
+
+## 0.1.4
+
+* 增加文件打开功能
+* 内嵌webview增加接口isX5WebViewLoadSuccess

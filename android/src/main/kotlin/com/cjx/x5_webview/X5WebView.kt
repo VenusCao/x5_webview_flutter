@@ -126,6 +126,14 @@ class X5WebView(private val context: Context, val id: Int, val params: Map<Strin
                 result.success(null)
 
             }
+            "isX5WebViewLoadSuccess"->{
+               val exception= webView.x5WebViewExtension
+                if(exception==null){
+                    result.success(false)
+                }else{
+                    result.success(true)
+                }
+            }
 
             else -> {
                 result.notImplemented()

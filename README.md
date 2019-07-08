@@ -14,7 +14,7 @@
 pubspec.yaml文件添加
 ```
 dependencies:
-  x5_webview: ^0.0.1 //最新版本见上方
+  x5_webview: ^x.x.x //最新版本见上方
 ```
 
 [为兼容x64手机](https://x5.tencent.com/tbs/technical.html#/detail/sdk/1/34cf1488-7dc2-41ca-a77f-0014112bcab7)，在bulid.gradle里面的defaultConfig添加ndk支持
@@ -105,7 +105,11 @@ Toast.postMessage("YYY")
      print("x5Video不可用");
  }
 ```
-
+打开本地文件(格式支持较多，视频音频图片办公文档压缩包等等，[支持文件详情](http://lc-qmtbhnki.cn-n1.lcfile.com/aa1b149fab1fd3c7d88b/%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F%E6%94%AF%E6%8C%81%E5%88%97%E8%A1%A8.xlsx))
+```
+var msg = await X5Sdk.openFile("/sdcard/download/FileList.xlsx");
+print(msg);
+```
 如果你只是想要简单的展示web页面，可使用以下代码直接打开一个webActivity，
 性能更佳
 ```
@@ -125,9 +129,17 @@ X5Sdk.openWebActivity("https://www.baidu.com",title: "web页面");
 
 * 如果添加ndk支持后，打开app闪退请添加以下运行配置，或者使用android sdk运行。
     ```
-    flutter run --target-platform android-arm32
+    flutter build apk --debug --target-platform=android-arm
+    flutter run --use-application-binary=build/app/outputs/apk/debug/app-debug.apk
     ```
-    
+* android9.0版本webview联不了网在manifest添加
+    ```
+    <application
+        ...
+        android:usesCleartextTraffic="true"
+       >
+    </application>
+    ```
 * 有比较急的问题可以加我QQ：793710663
 
 ## 示例程序下载

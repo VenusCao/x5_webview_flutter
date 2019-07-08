@@ -4,6 +4,8 @@ import 'package:x5_webview/x5_sdk.dart';
 
 import 'demo.dart';
 
+import 'package:dio/dio.dart';
+
 void main() {
   X5Sdk.setDownloadWithoutWifi(true); //没有x5内核，是否在非wifi模式下载内核。默认false
   X5Sdk.init().then((isOK) {
@@ -67,6 +69,67 @@ class _HomePageState extends State<HomePage> {
                 child: Text("x5video直接播放视频")),
             RaisedButton(
                 onPressed: () async {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: Text("X5Sdk打开本地文件示例"),
+                          content: Text("请先下载再打开"),
+                          actions: <Widget>[
+                            FlatButton(
+                              onPressed: () async {
+                                Navigator.pop(context);
+                              },
+                              child: Text("取消"),
+                            ),
+                            FlatButton(
+                              onPressed: () async {
+                                try {
+                                  showDialog(
+                                      context: context,
+                                      barrierDismissible: false,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          content: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: <Widget>[
+                                              CircularProgressIndicator(),
+                                              Padding(
+                                                padding:
+                                                    EdgeInsets.only(top: 20),
+                                              ),
+                                              Text("等待下载")
+                                            ],
+                                          ),
+                                        );
+                                      });
+                                  var response = await Dio().download(
+                                      "http://lc-QMTBhNKI.cn-n1.lcfile.com/aa1b149fab1fd3c7d88b/%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F%E6%94%AF%E6%8C%81%E5%88%97%E8%A1%A8.xlsx",
+                                      "/sdcard/download/FileList.xlsx");
+                                  print(response.data);
+                                  Navigator.pop(context);
+                                } catch (e) {
+                                  print(e);
+                                  Navigator.pop(context);
+                                }
+                              },
+                              child: Text("下载"),
+                            ),
+                            FlatButton(
+                              onPressed: () async {
+                                var msg = await X5Sdk.openFile(
+                                    "/sdcard/download/FileList.xlsx");
+                                print(msg);
+                              },
+                              child: Text("打开"),
+                            )
+                          ],
+                        );
+                      });
+                },
+                child: Text("x5sdk打开本地文件示例")),
+            RaisedButton(
+                onPressed: () async {
 //                                          Navigator.of(context).push(
 //                            CupertinoPageRoute(builder: (BuildContext context) {
 //                              return DemoWebViewPage("http://bin.amazeui.org/tizayo");
@@ -88,7 +151,7 @@ class _HomePageState extends State<HomePage> {
                       onConfirm: (url) async {
                         await X5Sdk.openWebActivity(url, title: "web页面");
                       },
-                      defaultText: "https://www.baidu.com");
+                      defaultText: "https://baidu.com");
                 },
                 child: Text("x5webviewActivity")),
           ],

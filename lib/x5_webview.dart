@@ -83,6 +83,10 @@ class X5WebViewController {
     });
   }
 
+  Future<bool> isX5WebViewLoadSuccess() async {
+    return _channel.invokeMethod('isX5WebViewLoadSuccess');
+  }
+
   Future<String> evaluateJavascript(String js) async {
     assert(js != null);
     return _channel.invokeMethod('evaluateJavascript', {

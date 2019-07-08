@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import com.tencent.smtt.sdk.QbSdk
 import com.tencent.smtt.sdk.TbsListener
 import com.tencent.smtt.sdk.TbsVideo
@@ -13,6 +14,7 @@ import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugin.common.PluginRegistry.Registrar
+import java.io.File
 
 class X5WebViewPlugin(var context: Context, var activity: Activity) : MethodCallHandler {
     companion object {
@@ -70,6 +72,40 @@ class X5WebViewPlugin(var context: Context, var activity: Activity) : MethodCall
                 TbsVideo.openVideo(context, url, bundle)
                 result.success(null)
             }
+            "openFile" -> {
+                val filePath = call.argument<String>("filePath")
+                val params = hashMapOf<String, String>()
+                params["local"] = call.argument<String>("local") ?: "false"
+                params["style"] = call.argument<String>("style") ?: "0"
+                params["topBarBgColor"] = call.argument<String>("topBarBgColor") ?: "#2CFC47"
+                var menuData = call.argument<String>("menuData")
+                if (menuData != null) {
+                    params["menuData"] = menuData
+                }
+                if (!File(filePath).exists()) {
+                    Toast.makeText(context, "文件不存在,请确认$filePath 是否正确", Toast.LENGTH_LONG).show()
+                    result.success("文件不存在,请确认$filePath 是否正确")
+                    return
+                }
+                QbSdk.canOpenFile(activity, filePath) { canOpenFile ->
+                    if (canOpenFile) {
+                        QbSdk.openFileReader(activity, filePath, params) { msg ->
+                            result.success(msg)
+                        }
+                    } else {
+                        Toast.makeText(context, "X5Sdk无法打开此文件", Toast.LENGTH_LONG).show()
+                        result.success("X5Sdk无法打开此文件")
+                    }
+                }
+
+
+//                val screenMode = call.argument<Int>("screenMode") ?: 103
+//                val bundle = Bundle()
+//                bundle.putInt("screenMode", screenMode)
+//                TbsVideo.openVideo(context, url, bundle)
+//                result.success(null)
+            }
+
             "openWebActivity" -> {
                 val url = call.argument<String>("url")
                 val title = call.argument<String>("title")

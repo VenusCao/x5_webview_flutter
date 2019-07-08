@@ -41,6 +41,9 @@ class _DemoWebViewPageState extends State<DemoWebViewPage> {
                           _controller = control;
                         },
                         onPageFinished: () async {
+                          var isSuccess =
+                              await _controller.isX5WebViewLoadSuccess();
+                          print(isSuccess ? "x5内核加载成功" : "x5内核加载失败");
                           var url = await _controller.currentUrl();
                           print(url);
                           var listName = ["X5Web", "Toast"];

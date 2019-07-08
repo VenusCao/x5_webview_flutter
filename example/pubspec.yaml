@@ -16,7 +16,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
+  dio: 2.1.7
   x5_webview:
     path: ../
 
