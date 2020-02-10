@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
+import com.tencent.smtt.export.external.TbsCoreSettings
 import com.tencent.smtt.sdk.QbSdk
 import com.tencent.smtt.sdk.TbsListener
 import com.tencent.smtt.sdk.TbsVideo
@@ -22,24 +23,29 @@ class X5WebViewPlugin(var context: Context, var activity: Activity) : MethodCall
         fun registerWith(registrar: Registrar) {
             val channel = MethodChannel(registrar.messenger(), "com.cjx/x5Video")
             channel.setMethodCallHandler(X5WebViewPlugin(registrar.context(), registrar.activity()))
-            setCallBack(channel)
-
-            registrar.platformViewRegistry().registerViewFactory("com.cjx/x5WebView", X5WebViewFactory(registrar.messenger(), registrar.activeContext()))
+            setCallBack(channel, registrar.activity())
+            registrar.platformViewRegistry().registerViewFactory("com.cjx/x5WebView", X5WebViewFactory(registrar.messenger(), registrar.activeContext(), registrar.view()))
 
         }
 
-        private fun setCallBack(channel: MethodChannel) {
+        private fun setCallBack(channel: MethodChannel, activity: Activity) {
             QbSdk.setTbsListener(object : TbsListener {
                 override fun onInstallFinish(p0: Int) {
-                    channel.invokeMethod("onInstallFinish", null)
+                    activity.runOnUiThread {
+                        channel.invokeMethod("onInstallFinish", null)
+                    }
                 }
 
                 override fun onDownloadFinish(p0: Int) {
-                    channel.invokeMethod("onDownloadFinish", null)
+                    activity.runOnUiThread {
+                        channel.invokeMethod("onDownloadFinish", null)
+                    }
                 }
 
                 override fun onDownloadProgress(p0: Int) {
-                    channel.invokeMethod("onDownloadProgress", p0)
+                    activity.runOnUiThread {
+                        channel.invokeMethod("onDownloadProgress", p0)
+                    }
                 }
             })
         }
@@ -48,6 +54,10 @@ class X5WebViewPlugin(var context: Context, var activity: Activity) : MethodCall
     override fun onMethodCall(call: MethodCall, result: Result) {
         when (call.method) {
             "init" -> {
+                val map = hashMapOf<String, Any>()
+                map[TbsCoreSettings.TBS_SETTINGS_USE_SPEEDY_CLASSLOADER] = true
+                map[TbsCoreSettings.TBS_SETTINGS_USE_DEXLOADER_SERVICE] = true
+                QbSdk.initTbsSettings(map)
                 QbSdk.initX5Environment(context.applicationContext, object : QbSdk.PreInitCallback {
                     override fun onCoreInitFinished() {
 

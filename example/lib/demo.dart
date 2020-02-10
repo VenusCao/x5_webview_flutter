@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:x5_webview/x5_webview.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class DemoWebViewPage extends StatefulWidget {
   final url;
@@ -72,21 +73,23 @@ class _DemoWebViewPageState extends State<DemoWebViewPage> {
                       )
                     :
                     //可替换为其他已实现ios webview,此处使用webview_flutter
-                    Container()
-//          WebView(
-//              initialUrl: url,
-//              javascriptMode: JavascriptMode.unrestricted,
-//              javascriptChannels: [JavascriptChannel(name: "X5Web", onMessageReceived: (msg){
-//                print(msg);
-//              })].toSet(),
-//              onWebViewCreated: (control) {
-////                _otherController = control;
-////                var body = _otherController
-////                    .evaluateJavascript('document.body.innerHTML');
-////                print(body);
-//              },
-//            )
-                ),
+                    WebView(
+                        initialUrl: url,
+                        javascriptMode: JavascriptMode.unrestricted,
+                        javascriptChannels: [
+                          JavascriptChannel(
+                              name: "X5Web",
+                              onMessageReceived: (msg) {
+                                print(msg);
+                              })
+                        ].toSet(),
+                        onWebViewCreated: (control) {
+//                _otherController = control;
+//                var body = _otherController
+//                    .evaluateJavascript('document.body.innerHTML');
+//                print(body);
+                        },
+                      )),
             RaisedButton(
               onPressed: () {
                 _controller.evaluateJavascript(

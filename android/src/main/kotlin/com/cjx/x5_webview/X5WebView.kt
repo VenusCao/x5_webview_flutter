@@ -1,6 +1,9 @@
 package com.cjx.x5_webview
 
+import android.annotation.TargetApi
 import android.content.Context
+import android.hardware.display.DisplayManager
+import android.os.Build
 import android.view.View
 import com.tencent.smtt.export.external.interfaces.IX5WebChromeClient
 import com.tencent.smtt.export.external.interfaces.WebResourceRequest
@@ -12,16 +15,24 @@ import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.platform.PlatformView
 
-class X5WebView(private val context: Context, val id: Int, val params: Map<String, Any>, val messenger: BinaryMessenger? = null) : PlatformView, MethodChannel.MethodCallHandler {
-    private val webView: WebView
+
+@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+class X5WebView(private val context: Context, val id: Int, val params: Map<String, Any>, val messenger: BinaryMessenger? = null, private val containerView: View) : PlatformView, MethodChannel.MethodCallHandler {
+    private var webView: InputAwareWebView
     private val channel: MethodChannel = MethodChannel(messenger, "com.cjx/x5WebView_$id")
 
     init {
+        val displayListenerProxy = DisplayListenerProxy()
+        val displayManager = context.getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
+        displayListenerProxy.onPreWebViewInitialization(displayManager)
+        webView = InputAwareWebView(context, containerView)
+        displayListenerProxy.onPostWebViewInitialization(displayManager)
         channel.setMethodCallHandler(this)
-        webView = WebView(context)
         webView.apply {
             settings.javaScriptEnabled = params["javaScriptEnabled"] as Boolean
-            settings.domStorageEnabled=true
+            settings.useWideViewPort = true
+            settings.domStorageEnabled = true
+            settings.javaScriptCanOpenWindowsAutomatically = true
             loadUrl(params["url"].toString())
             webViewClient = object : WebViewClient() {
                 override fun shouldOverrideUrlLoading(view: WebView, url: String?): Boolean {
@@ -72,6 +83,23 @@ class X5WebView(private val context: Context, val id: Int, val params: Map<Strin
 //            data.putInt("DefaultVideoScreen",2)
 //            x5WebViewExtension.invokeMiscMethod("setVideoParams",data)
         }
+
+    }
+
+    override fun onFlutterViewDetached() {
+        webView.setContainerView(null)
+    }
+
+    override fun onFlutterViewAttached(flutterView: View) {
+        webView.setContainerView(flutterView)
+    }
+
+    override fun onInputConnectionUnlocked() {
+        webView.isLockInputConnection(false)
+    }
+
+    override fun onInputConnectionLocked() {
+        webView.isLockInputConnection(true)
     }
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
@@ -116,21 +144,21 @@ class X5WebView(private val context: Context, val id: Int, val params: Map<Strin
                 webView.evaluateJavascript(js) { value -> result.success(value) }
             }
 
-            "addJavascriptChannels"->{
+            "addJavascriptChannels" -> {
                 val arg = call.arguments as Map<String, Any>
                 val names = arg["names"] as List<String>
-                for(name in names){
-                    webView.addJavascriptInterface(JavascriptChannel(name,channel,context),name)
+                for (name in names) {
+                    webView.addJavascriptInterface(JavascriptChannel(name, channel, context), name)
                 }
                 webView.reload()
                 result.success(null)
 
             }
-            "isX5WebViewLoadSuccess"->{
-               val exception= webView.x5WebViewExtension
-                if(exception==null){
+            "isX5WebViewLoadSuccess" -> {
+                val exception = webView.x5WebViewExtension
+                if (exception == null) {
                     result.success(false)
-                }else{
+                } else {
                     result.success(true)
                 }
             }
@@ -147,6 +175,7 @@ class X5WebView(private val context: Context, val id: Int, val params: Map<Strin
 
     override fun dispose() {
         channel.setMethodCallHandler(null)
+        webView.dispose()
         webView.destroy()
     }
 }
