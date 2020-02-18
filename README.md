@@ -115,7 +115,15 @@ print(msg);
 ```
 X5Sdk.openWebActivity("https://www.baidu.com",title: "web页面");
 ```
-
+打开本地html文件
+```
+var fileHtmlContents = await rootBundle.loadString("assets/index.html");
+var url = Uri.dataFromString(fileHtmlContents,
+                          mimeType: 'text/html',
+                          encoding: Encoding.getByName('utf-8'))
+                      .toString();
+X5Sdk.openWebActivity(url, title: "本地html示例");
+```
 ## 
 
 ## 注意事项

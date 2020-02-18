@@ -61,7 +61,7 @@ class _HomePageState extends State<HomePage> {
                   if (canUseTbsPlayer) {
                     showInputDialog(
                         onConfirm: (url) async {
-                          await X5Sdk.openVideo(url,screenMode: 102);
+                          await X5Sdk.openVideo(url, screenMode: 102);
                         },
                         defaultText:
                             "https://youku.com-l-youku.com/20181221/5625_d9733a43/index.m3u8");
@@ -159,11 +159,12 @@ class _HomePageState extends State<HomePage> {
                 child: Text("x5webviewActivity")),
             RaisedButton(
                 onPressed: () async {
-                 var fileHtmlContents=await rootBundle.loadString("assets/index.html");
-                 var url=Uri.dataFromString(fileHtmlContents,
-                     mimeType: 'text/html', encoding: Encoding.getByName('utf-8'))
-                     .toString();
-                  print(url);
+                  var fileHtmlContents =
+                      await rootBundle.loadString("assets/index.html");
+                  var url = Uri.dataFromString(fileHtmlContents,
+                          mimeType: 'text/html',
+                          encoding: Encoding.getByName('utf-8'))
+                      .toString();
 
                   await X5Sdk.openWebActivity(url, title: "本地html示例");
 
@@ -176,8 +177,6 @@ class _HomePageState extends State<HomePage> {
 //                      defaultText: "https://baidu.com");
                 },
                 child: Text("本地html")),
-
-
           ],
         ),
       ),
