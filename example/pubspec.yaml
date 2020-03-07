@@ -16,8 +16,9 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  dio: 2.1.7
+  dio: ^3.0.9
   webview_flutter: ^0.3.19+6
+  path_provider: ^1.6.5
   x5_webview:
     path: ../
 

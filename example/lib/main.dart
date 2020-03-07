@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:x5_webview/x5_sdk.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'demo.dart';
 
@@ -106,9 +107,13 @@ class _HomePageState extends State<HomePage> {
                                           ),
                                         );
                                       });
+                                  var dir=await getExternalStorageDirectory();
+                                  print(await getExternalStorageDirectory());
+                                  print(await getApplicationSupportDirectory());
+                                  print(await getApplicationDocumentsDirectory());
                                   var response = await Dio().download(
                                       "http://lc-QMTBhNKI.cn-n1.lcfile.com/aa1b149fab1fd3c7d88b/%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F%E6%94%AF%E6%8C%81%E5%88%97%E8%A1%A8.xlsx",
-                                      "/sdcard/download/FileList.xlsx");
+                                      "${dir.path}/FileList.xlsx");
                                   print(response.data);
                                   Navigator.pop(context);
                                 } catch (e) {
@@ -120,8 +125,10 @@ class _HomePageState extends State<HomePage> {
                             ),
                             FlatButton(
                               onPressed: () async {
+                                var dir= await getExternalStorageDirectory();
+                                print(dir);
                                 var msg = await X5Sdk.openFile(
-                                    "/sdcard/download/FileList.xlsx");
+                                    "${dir.path}/FileList.xlsx");
                                 print(msg);
                               },
                               child: Text("打开"),

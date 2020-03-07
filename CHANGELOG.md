@@ -24,3 +24,8 @@
 
 * 增加文件打开功能
 * 内嵌webview增加接口isX5WebViewLoadSuccess
+
+## 0.1.5
+
+* 增加本地html加载示例
+* sdk升级，添加文件权限

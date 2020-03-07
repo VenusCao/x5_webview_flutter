@@ -150,7 +150,7 @@ X5Sdk.openWebActivity(url, title: "本地html示例");
     ```
 * 有比较急的问题可以加我QQ：793710663
 
-## 示例程序下载
+## 示例程序下载(密码：123456)
 
 [apk下载](https://www.pgyer.com/x5_webview)
 
