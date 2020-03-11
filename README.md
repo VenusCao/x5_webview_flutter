@@ -89,8 +89,7 @@ return Scaffold(
             ),
     );
 ```
-内嵌webview js与flutter互调  
-  
+内嵌webview js与flutter互调
 * flutter调用js
 ```
 var body = await _controller.evaluateJavascript("document.body.innerHTML");
@@ -145,7 +144,7 @@ X5Sdk.openWebActivity(url, title: "本地html示例");
         android:usesCleartextTraffic="true">
     </application>
     ```
-* android7.0版本打开文件需要在mannifest的<application>内添加(xml文件已在插件内，无需自己创建)
+* android7.0版本打开文件需要在manifest的application内添加(xml文件已在插件内，无需自己创建)
     ```
           <!--        不使用androidx 请用android:name="android.support.v4.content.FileProvider"-->    
         <provider
