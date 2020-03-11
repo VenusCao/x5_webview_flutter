@@ -33,7 +33,27 @@ void main() {
   runApp(MyApp());
 }
 ```
-使用内嵌webview
+
+如果你只是想要简单的展示web页面，可使用以下代码直接打开一个webActivity，
+性能更佳(推荐使用，视频播放也可以这个api)
+```
+X5Sdk.openWebActivity("https://www.baidu.com",title: "web页面");
+```
+
+使用TBSPlayer直接全屏播放视频(screenMode自行测试，103横屏 104竖屏，官方默认使用102第一次点击全屏无反应)
+```
+    var isOk = await X5Sdk.openVideo(
+    "https://ifeng.com-l-ifeng.com/20180528/7391_46b6cf3b/index.m3u8",screenMode: 102);
+```
+
+打开本地文件(格式支持较多，视频音频图片办公文档压缩包等等，[支持文件详情](http://lc-qmtbhnki.cn-n1.lcfile.com/aa1b149fab1fd3c7d88b/%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F%E6%94%AF%E6%8C%81%E5%88%97%E8%A1%A8.xlsx))
+```
+//local: “true”表示是进入系统文件查看器，如果不设置或设置为“false”，则进入 miniqb 浏览器模式
+var msg = await X5Sdk.openFile("/sdcard/download/FileList.xlsx",local: "true");
+print(msg);
+```
+
+## 使用内嵌webview(可能会有些bug，目前知道的是输入框不能正常打字)
 
 ```
 return Scaffold(
@@ -95,36 +115,15 @@ X5Web.postMessage("XXX")
 Toast.postMessage("YYY")
 ```
 
-使用TBSPlayer直接播放视频
+## 打开本地html文件(使用assets文件，内嵌webview同理)
 ```
- var canUseTbsPlayer = await X5Sdk.canUseTbsPlayer();
- if (canUseTbsPlayer) {
-    var isOk = await X5Sdk.openVideo(
-    "https://ifeng.com-l-ifeng.com/20180528/7391_46b6cf3b/index.m3u8");
- } else {
-     print("x5Video不可用");
- }
-```
-打开本地文件(格式支持较多，视频音频图片办公文档压缩包等等，[支持文件详情](http://lc-qmtbhnki.cn-n1.lcfile.com/aa1b149fab1fd3c7d88b/%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F%E6%94%AF%E6%8C%81%E5%88%97%E8%A1%A8.xlsx))
-```
-var msg = await X5Sdk.openFile("/sdcard/download/FileList.xlsx");
-print(msg);
-```
-如果你只是想要简单的展示web页面，可使用以下代码直接打开一个webActivity，
-性能更佳
-```
-X5Sdk.openWebActivity("https://www.baidu.com",title: "web页面");
-```
-打开本地html文件
-```
-var fileHtmlContents = await rootBundle.loadString("assets/index.html");
-var url = Uri.dataFromString(fileHtmlContents,
+var fileS = await rootBundle.loadString("assets/index.html");
+var url = Uri.dataFromString(fileS,
                           mimeType: 'text/html',
                           encoding: Encoding.getByName('utf-8'))
                       .toString();
 X5Sdk.openWebActivity(url, title: "本地html示例");
 ```
-## 
 
 ## 注意事项
 * 该插件暂时只支持Android手机，IOS会使用无效。ios可使用[webview_flutter](https://pub.flutter-io.cn/packages/webview_flutter)或其他已实现IOS WXWebView插件
@@ -132,7 +131,6 @@ X5Sdk.openWebActivity(url, title: "本地html示例");
     ```
     http://debugtbs.qq.com
     ```
-
 * 请使用真机测试，模拟器可能不能正常显示
 
 * 如果添加ndk支持后，打开app闪退请添加以下运行配置，或者使用android sdk运行。
@@ -144,9 +142,21 @@ X5Sdk.openWebActivity(url, title: "本地html示例");
     ```
     <application
         ...
-        android:usesCleartextTraffic="true"
-       >
+        android:usesCleartextTraffic="true">
     </application>
+    ```
+* android7.0版本打开文件需要在mannifest的<application>内添加(xml文件已在插件内，无需自己创建)
+    ```
+          <!--        不使用androidx 请用android:name="android.support.v4.content.FileProvider"-->    
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/x5webview_file_paths" />
+        </provider>  
     ```
 * 有比较急的问题可以加我QQ：793710663
 
