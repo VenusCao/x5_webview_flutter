@@ -11,6 +11,7 @@ import 'demo.dart';
 import 'package:dio/dio.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   X5Sdk.setDownloadWithoutWifi(true); //没有x5内核，是否在非wifi模式下载内核。默认false
   X5Sdk.init().then((isOK) {
     print(isOK ? "X5内核成功加载" : "X5内核加载失败");
