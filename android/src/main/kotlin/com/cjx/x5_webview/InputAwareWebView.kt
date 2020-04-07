@@ -8,7 +8,7 @@ import android.view.inputmethod.InputMethodManager
 import com.tencent.smtt.sdk.WebView
 
 
-class InputAwareWebView(context: Context?, private var containerView: View) : WebView(context) {
+class InputAwareWebView(context: Context?, private var containerView: View?) : WebView(context) {
     var threadedInputConnectionProxyView: View? = null
     var proxyAdapterView: ThreadedInputConnectionProxyAdapterView? = null
 
@@ -48,7 +48,7 @@ class InputAwareWebView(context: Context?, private var containerView: View) : We
             return
         }
 
-        setInputConnectionTarget(containerView)
+        setInputConnectionTarget(containerView!!)
     }
 
     private fun setInputConnectionTarget(targetView: View) {
@@ -59,8 +59,8 @@ class InputAwareWebView(context: Context?, private var containerView: View) : We
             return
         }
         targetView.requestFocus()
-        containerView.post {
-            var imm: InputMethodManager = containerView.context.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        containerView!!.post {
+            var imm: InputMethodManager = containerView!!.context.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
             targetView.onWindowFocusChanged(true)
             imm.isActive(containerView)
         }
@@ -81,7 +81,7 @@ class InputAwareWebView(context: Context?, private var containerView: View) : We
                     "Can't create a proxy view because there's no container view. Text input may not work.")
             return super.checkInputConnectionProxy(view)
         }
-        proxyAdapterView = ThreadedInputConnectionProxyAdapterView(containerView, view, view.handler)
+        proxyAdapterView = ThreadedInputConnectionProxyAdapterView(containerView!!, view, view.handler)
         setInputConnectionTarget(proxyAdapterView!!)
         return super.checkInputConnectionProxy(view)
 

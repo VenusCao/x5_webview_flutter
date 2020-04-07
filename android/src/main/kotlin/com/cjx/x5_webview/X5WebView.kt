@@ -17,7 +17,7 @@ import io.flutter.plugin.platform.PlatformView
 
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-class X5WebView(private val context: Context, val id: Int, val params: Map<String, Any>, val messenger: BinaryMessenger? = null, private val containerView: View) : PlatformView, MethodChannel.MethodCallHandler {
+class X5WebView(private val context: Context,private val id: Int,private val params: Map<String, Any>, val messenger: BinaryMessenger? = null, private val containerView: View?) : PlatformView, MethodChannel.MethodCallHandler {
     private var webView: InputAwareWebView
     private val channel: MethodChannel = MethodChannel(messenger, "com.cjx/x5WebView_$id")
 

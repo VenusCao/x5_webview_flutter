@@ -10,6 +10,9 @@ import com.tencent.smtt.sdk.QbSdk
 import com.tencent.smtt.sdk.TbsListener
 import com.tencent.smtt.sdk.TbsVideo
 import com.tencent.smtt.sdk.WebView
+import io.flutter.embedding.engine.plugins.FlutterPlugin
+import io.flutter.embedding.engine.plugins.activity.ActivityAware
+import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
@@ -17,7 +20,7 @@ import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugin.common.PluginRegistry.Registrar
 import java.io.File
 
-class X5WebViewPlugin(var context: Context, var activity: Activity) : MethodCallHandler {
+class X5WebViewPlugin(var context: Context, var activity: Activity) : MethodCallHandler, FlutterPlugin, ActivityAware {
     companion object {
         @JvmStatic
         fun registerWith(registrar: Registrar) {
@@ -25,7 +28,6 @@ class X5WebViewPlugin(var context: Context, var activity: Activity) : MethodCall
             channel.setMethodCallHandler(X5WebViewPlugin(registrar.context(), registrar.activity()))
             setCallBack(channel, registrar.activity())
             registrar.platformViewRegistry().registerViewFactory("com.cjx/x5WebView", X5WebViewFactory(registrar.messenger(), registrar.activeContext(), registrar.view()))
-
         }
 
         private fun setCallBack(channel: MethodChannel, activity: Activity) {
@@ -174,5 +176,29 @@ class X5WebViewPlugin(var context: Context, var activity: Activity) : MethodCall
                 result.notImplemented()
             }
         }
+    }
+
+    override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
+        val channel = MethodChannel(binding.binaryMessenger, "com.cjx/x5Video")
+        channel.setMethodCallHandler(X5WebViewPlugin(binding.applicationContext, activity))
+        setCallBack(channel, activity)
+        binding.platformViewRegistry.registerViewFactory("com.cjx/x5WebView",X5WebViewFactory(binding.binaryMessenger,activity,null))
+
+    }
+
+    override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
+    }
+
+    override fun onDetachedFromActivity() {
+    }
+
+    override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
+    }
+
+    override fun onAttachedToActivity(binding: ActivityPluginBinding) {
+        this.activity=binding.activity
+    }
+
+    override fun onDetachedFromActivityForConfigChanges() {
     }
 }
