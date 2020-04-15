@@ -41,9 +41,8 @@ X5Sdk.openWebActivity("https://www.baidu.com",title: "web页面");
 
 打开本地文件(格式支持较多，视频音频图片办公文档压缩包等等，[支持文件详情](http://lc-qmtbhnki.cn-n1.lcfile.com/aa1b149fab1fd3c7d88b/%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F%E6%94%AF%E6%8C%81%E5%88%97%E8%A1%A8.xlsx))
 ```
-//local: “true”表示是进入系统文件查看器，如果不设置或设置为“false”，则进入 miniqb 浏览器模式
-var msg = await X5Sdk.openFile("/sdcard/download/FileList.xlsx",local: "true");
-print(msg);
+var errorMsg = await X5Sdk.openFile("/sdcard/download/FileList.xlsx");
+print(errorMsg);
 ```
 
 ## 使用内嵌webview(可能会有些bug)
