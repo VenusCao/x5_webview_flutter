@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import com.tencent.smtt.export.external.TbsCoreSettings
 import com.tencent.smtt.sdk.QbSdk
@@ -137,7 +138,7 @@ class X5WebViewPlugin(var context: Context, var activity: Activity) : MethodCall
                 QbSdk.canOpenFile(activity, filePath) { canOpenFile ->
                     if (canOpenFile) {
                         QbSdk.openFileReader(activity, filePath, params) { msg ->
-                            result.success(msg)
+                            Log.d("QbSdk",msg)
                         }
                     } else {
                         Toast.makeText(context, "X5Sdk无法打开此文件", Toast.LENGTH_LONG).show()
