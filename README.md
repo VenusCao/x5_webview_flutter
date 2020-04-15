@@ -17,13 +17,6 @@ dependencies:
   x5_webview: ^x.x.x //最新版本见上方
 ```
 
-[为兼容x64手机](https://x5.tencent.com/tbs/technical.html#/detail/sdk/1/34cf1488-7dc2-41ca-a77f-0014112bcab7)，在bulid.gradle里面的defaultConfig添加ndk支持
-```
-        ndk {
-            abiFilters "armeabi-v7a"
-        }
-```
-
 在启动时，初始化x5
 ```
 void main() {
@@ -53,7 +46,7 @@ var msg = await X5Sdk.openFile("/sdcard/download/FileList.xlsx",local: "true");
 print(msg);
 ```
 
-## 使用内嵌webview(可能会有些bug，目前知道的是输入框不能正常打字)
+## 使用内嵌webview(可能会有些bug)
 
 ```
 return Scaffold(
@@ -132,11 +125,6 @@ X5Sdk.openWebActivity(url, title: "本地html示例");
     ```
 * 请使用真机测试，模拟器可能不能正常显示
 
-* 如果添加ndk支持后，打开app闪退请添加以下运行配置，或者使用android sdk运行。
-    ```
-    flutter build apk --debug --target-platform=android-arm
-    flutter run --use-application-binary=build/app/outputs/apk/debug/app-debug.apk
-    ```
 * android9.0版本webview联不了网在manifest添加
     ```
     <application

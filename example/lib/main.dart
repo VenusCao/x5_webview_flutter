@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -83,9 +84,13 @@ class _HomePageState extends State<HomePage> {
                           actions: <Widget>[
                             FlatButton(
                               onPressed: () async {
-                                Navigator.pop(context);
+                                var dir= await getExternalStorageDirectory();
+                                print(dir);
+                                var msg = await X5Sdk.openFile(
+                                    "${dir.path}/FileList.xlsx",local: "true");
+                                print(msg);
                               },
-                              child: Text("取消"),
+                              child: Text("系统默认打开"),
                             ),
                             FlatButton(
                               onPressed: () async {
@@ -117,9 +122,9 @@ class _HomePageState extends State<HomePage> {
                                       "${dir.path}/FileList.xlsx");
                                   print(response.data);
                                   Navigator.pop(context);
-                                } catch (e) {
-                                  print(e);
+                                } on DioError catch (e) {
                                   Navigator.pop(context);
+                                  print(e.message);
                                 }
                               },
                               child: Text("下载"),
