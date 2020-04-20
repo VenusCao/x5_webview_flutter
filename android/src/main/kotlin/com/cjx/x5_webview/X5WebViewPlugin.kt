@@ -21,14 +21,26 @@ import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugin.common.PluginRegistry.Registrar
 import java.io.File
 
-class X5WebViewPlugin(var context: Context, var activity: Activity) : MethodCallHandler, FlutterPlugin, ActivityAware {
+class X5WebViewPlugin : MethodCallHandler, FlutterPlugin, ActivityAware {
+    constructor(mContext: Context,mActivity: Activity){
+        this.mActivity=mActivity
+        this.mContext=mContext
+    }
+    constructor()
+
+    var mContext: Context? = null
+    var mActivity: Activity? = null
+    var methodChannel: MethodChannel? = null
+    var mFlutterPluginBinding: FlutterPlugin.FlutterPluginBinding? = null
+
+    //兼容旧方式集成插件
     companion object {
         @JvmStatic
         fun registerWith(registrar: Registrar) {
             val channel = MethodChannel(registrar.messenger(), "com.cjx/x5Video")
-            channel.setMethodCallHandler(X5WebViewPlugin(registrar.context(), registrar.activity()))
+            channel.setMethodCallHandler(X5WebViewPlugin(registrar.context(),registrar.activity()))
             setCallBack(channel, registrar.activity())
-            registrar.platformViewRegistry().registerViewFactory("com.cjx/x5WebView", X5WebViewFactory(registrar.messenger(), registrar.activeContext(), registrar.view()))
+            registrar.platformViewRegistry().registerViewFactory("com.cjx/x5WebView", X5WebViewFactory(registrar.messenger(), registrar.activity(), registrar.view()))
         }
 
         private fun setCallBack(channel: MethodChannel, activity: Activity) {
@@ -54,6 +66,7 @@ class X5WebViewPlugin(var context: Context, var activity: Activity) : MethodCall
         }
     }
 
+
     override fun onMethodCall(call: MethodCall, result: Result) {
         when (call.method) {
             "init" -> {
@@ -61,7 +74,7 @@ class X5WebViewPlugin(var context: Context, var activity: Activity) : MethodCall
                 map[TbsCoreSettings.TBS_SETTINGS_USE_SPEEDY_CLASSLOADER] = true
                 map[TbsCoreSettings.TBS_SETTINGS_USE_DEXLOADER_SERVICE] = true
                 QbSdk.initTbsSettings(map)
-                QbSdk.initX5Environment(context.applicationContext, object : QbSdk.PreInitCallback {
+                QbSdk.initX5Environment(mContext?.applicationContext, object : QbSdk.PreInitCallback {
                     override fun onCoreInitFinished() {
 
                     }
@@ -75,14 +88,14 @@ class X5WebViewPlugin(var context: Context, var activity: Activity) : MethodCall
             }
             "canUseTbsPlayer" -> {
                 //返回是否可以使用tbsPlayer
-                result.success(TbsVideo.canUseTbsPlayer(context))
+                result.success(TbsVideo.canUseTbsPlayer(mContext))
             }
             "openVideo" -> {
                 val url = call.argument<String>("url")
                 val screenMode = call.argument<Int>("screenMode") ?: 103
                 val bundle = Bundle()
                 bundle.putInt("screenMode", screenMode)
-                TbsVideo.openVideo(context, url, bundle)
+                TbsVideo.openVideo(mContext, url, bundle)
                 result.success(null)
             }
             "openFile" -> {
@@ -131,40 +144,33 @@ class X5WebViewPlugin(var context: Context, var activity: Activity) : MethodCall
                     params["menuData"] = menuData
                 }
                 if (!File(filePath).exists()) {
-                    Toast.makeText(context, "文件不存在,请确认$filePath 是否正确", Toast.LENGTH_LONG).show()
+                    Toast.makeText(mContext, "文件不存在,请确认$filePath 是否正确", Toast.LENGTH_LONG).show()
                     result.success("文件不存在,请确认$filePath 是否正确")
                     return
                 }
-                QbSdk.canOpenFile(activity, filePath) { canOpenFile ->
+                QbSdk.canOpenFile(mActivity, filePath) { canOpenFile ->
                     if (canOpenFile) {
-                        QbSdk.openFileReader(activity, filePath, params) { msg ->
-                            Log.d("QbSdk",msg)
+                        QbSdk.openFileReader(mActivity, filePath, params) { msg ->
+                            Log.d("QbSdk", msg)
                         }
                     } else {
-                        Toast.makeText(context, "X5Sdk无法打开此文件", Toast.LENGTH_LONG).show()
+                        Toast.makeText(mContext, "X5Sdk无法打开此文件", Toast.LENGTH_LONG).show()
                         result.success("X5Sdk无法打开此文件")
                     }
                 }
-
-
-//                val screenMode = call.argument<Int>("screenMode") ?: 103
-//                val bundle = Bundle()
-//                bundle.putInt("screenMode", screenMode)
-//                TbsVideo.openVideo(context, url, bundle)
-//                result.success(null)
             }
 
             "openWebActivity" -> {
                 val url = call.argument<String>("url")
                 val title = call.argument<String>("title")
-                val intent = Intent(activity, X5WebViewActivity::class.java)
+                val intent = Intent(mActivity, X5WebViewActivity::class.java)
                 intent.putExtra("url", url)
                 intent.putExtra("title", title)
-                activity.startActivity(intent)
+                mActivity?.startActivity(intent)
                 result.success(null)
             }
             "getCarshInfo" -> {
-                val info = WebView.getCrashExtraMessage(context)
+                val info = WebView.getCrashExtraMessage(mContext)
                 result.success(info)
             }
             "setDownloadWithoutWifi" -> {
@@ -179,25 +185,52 @@ class X5WebViewPlugin(var context: Context, var activity: Activity) : MethodCall
         }
     }
 
+    //新方式集成插件
     override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
-        val channel = MethodChannel(binding.binaryMessenger, "com.cjx/x5Video")
-        channel.setMethodCallHandler(X5WebViewPlugin(binding.applicationContext, activity))
-        setCallBack(channel, activity)
-        binding.platformViewRegistry.registerViewFactory("com.cjx/x5WebView",X5WebViewFactory(binding.binaryMessenger,activity,null))
+        Log.e("onAttachedToEngine", "onAttachedToEngine")
+        if (mActivity == null) {
+            Log.e("onAttachedToEngine", "mActivity==null")
+            mFlutterPluginBinding = binding
+            return
+        }
+        mFlutterPluginBinding = binding
+        mContext = binding.applicationContext
 
+        methodChannel = MethodChannel(binding.binaryMessenger, "com.cjx/x5Video")
+        methodChannel?.setMethodCallHandler(X5WebViewPlugin(mContext!!,mActivity!!))
+        setCallBack(methodChannel!!, mActivity!!)
+        binding.platformViewRegistry.registerViewFactory("com.cjx/x5WebView", X5WebViewFactory(binding.binaryMessenger, mActivity!!, null))
     }
 
     override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
+        Log.e("onDetachedFromEngine", "onDetachedFromEngine")
+        QbSdk.setTbsListener(null)
+        mFlutterPluginBinding = null
+        methodChannel?.setMethodCallHandler(null)
+        methodChannel = null
     }
 
     override fun onDetachedFromActivity() {
+        Log.e("onDetachedFromActivity", "onDetachedFromActivity")
     }
 
     override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
     }
 
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {
-        this.activity=binding.activity
+        Log.e("onAttachedToActivity", "onAttachedToActivity")
+        if (mFlutterPluginBinding == null) {
+            Log.e("onAttachedToActivity", "mFlutterPluginBinding==null")
+            this.mActivity = binding.activity
+            return
+        }
+        this.mActivity = binding.activity
+        this.mContext = binding.activity.applicationContext
+        methodChannel = MethodChannel(mFlutterPluginBinding?.binaryMessenger, "com.cjx/x5Video")
+        methodChannel?.setMethodCallHandler(X5WebViewPlugin(mContext!!,mActivity!!))
+        setCallBack(methodChannel!!, mActivity!!)
+        mFlutterPluginBinding?.platformViewRegistry?.registerViewFactory("com.cjx/x5WebView", X5WebViewFactory(mFlutterPluginBinding?.binaryMessenger!!, mActivity!!, null))
+
     }
 
     override fun onDetachedFromActivityForConfigChanges() {

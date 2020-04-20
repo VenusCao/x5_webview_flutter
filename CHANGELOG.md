@@ -1,3 +1,7 @@
+## 0.2.1
+
+* 兼容新旧两种插件api(详情见manifest和MainActivity的注释)
+
 ## 0.2.0
 
 * kotlin版本和gradle版本升级

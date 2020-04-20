@@ -41,6 +41,11 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/x5webview_file_paths" />
         </provider>
-
+        <!-- Don't delete the meta-data below.
+                    This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
+<!--        新版插件api添加，旧版去掉-->
+        <meta-data
+            android:name="flutterEmbedding"
+            android:value="2" />
     </application>
 </manifest>

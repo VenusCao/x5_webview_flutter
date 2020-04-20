@@ -144,6 +144,7 @@ X5Sdk.openWebActivity(url, title: "本地html示例");
                 android:resource="@xml/x5webview_file_paths" />
         </provider>  
     ```
+
 * 有比较急的问题可以加我QQ：793710663
 
 ## 示例程序下载(密码：123456)
