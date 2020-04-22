@@ -19,6 +19,7 @@ dev_dependencies:
   dio: ^3.0.9
   webview_flutter: ^0.3.19+6
   path_provider: ^1.6.5
+  permission_handler: ^5.0.0+hotfix.3
   x5_webview:
     path: ../
 

@@ -76,7 +76,7 @@ class X5WebViewPlugin : MethodCallHandler, FlutterPlugin, ActivityAware {
                 QbSdk.initTbsSettings(map)
                 QbSdk.initX5Environment(mContext?.applicationContext, object : QbSdk.PreInitCallback {
                     override fun onCoreInitFinished() {
-
+                        Log.e("X5Sdk","onCoreInitFinished")
                     }
 
                     override fun onViewInitFinished(p0: Boolean) {

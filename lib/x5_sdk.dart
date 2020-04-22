@@ -16,13 +16,25 @@ class X5Sdk {
     }
   }
 
-  ///加载内核，没有内核会自动下载,加载失败会自动调用系统内核
+  ///加载内核，没有内核会自动下载,加载失败会自动调用系统内核。
+  ///不要重复请求。如需要重新加载可重启应用
+  ///android 6.0+调用之前需动态请求权限（电话和存储权限）
   static Future<bool> init() async {
     if (defaultTargetPlatform == TargetPlatform.android) {
       bool res = await _channel.invokeMethod("init");
       return res;
     } else {
       return false;
+    }
+  }
+
+  ///获取x5的日志
+  static Future<String> getCrashInfo() async {
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      var res = await _channel.invokeMethod("getCarshInfo");
+      return res;
+    } else {
+      return "";
     }
   }
 
@@ -166,5 +178,7 @@ class X5SdkListener {
   DownloadProgress onDownloadProgress;
 
   X5SdkListener(
-      this.onInstallFinish, this.onDownloadFinish, this.onDownloadProgress);
+      {@required this.onInstallFinish,
+      @required this.onDownloadFinish,
+      @required this.onDownloadProgress});
 }

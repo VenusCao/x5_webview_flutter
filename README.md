@@ -17,14 +17,10 @@ dependencies:
   x5_webview: ^x.x.x //最新版本见上方
 ```
 
-在启动时，初始化x5
+初始化x5。(安卓6.0+需在init之前请求动态权限，可以使用，详情见example/lib/main.dart)
 ```
-void main() {
-  X5Sdk.init().then((isOK) {
-    print(isOK ? "X5内核成功加载" : "X5内核加载失败");
-  });
-  runApp(MyApp());
-}
+var isOk = await X5Sdk.init();
+print(isOk ? "X5内核成功加载" : "X5内核加载失败");
 ```
 
 如果你只是想要简单的展示web页面，可使用以下代码直接打开一个webActivity，
