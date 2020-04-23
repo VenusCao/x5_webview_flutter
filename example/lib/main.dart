@@ -18,7 +18,7 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: HomePage());
+    return MaterialApp(home: HomePage(),theme: ThemeData(primarySwatch: Colors.blue),);
   }
 }
 
@@ -45,11 +45,6 @@ class _HomePageState extends State<HomePage> {
       body: Center(
         child: ListView(
           children: <Widget>[
-            RaisedButton(
-                onPressed: () async {
-                  loadX5();
-                },
-                child: Text("重新加载内核")),
             RaisedButton(
                 onPressed: () async {
                   X5Sdk.openWebActivity("http://debugtbs.qq.com",
@@ -177,6 +172,11 @@ class _HomePageState extends State<HomePage> {
                   await X5Sdk.openWebActivity(url, title: "本地html示例");
                 },
                 child: Text("本地html")),
+            RaisedButton(
+                onPressed: () async {
+                  loadX5();
+                },
+                child: Text("重新加载内核")),
             Text("内核状态：\n${crashInfo ?? "未加载"}")
           ],
         ),

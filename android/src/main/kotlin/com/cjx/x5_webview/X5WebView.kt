@@ -17,7 +17,7 @@ import io.flutter.plugin.platform.PlatformView
 
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-class X5WebView(private val context: Context,private val id: Int,private val params: Map<String, Any>, val messenger: BinaryMessenger? = null, private val containerView: View?) : PlatformView, MethodChannel.MethodCallHandler {
+class X5WebView(private val context: Context, private val id: Int, private val params: Map<String, Any>, val messenger: BinaryMessenger? = null, private val containerView: View?) : PlatformView, MethodChannel.MethodCallHandler {
     private var webView: InputAwareWebView
     private val channel: MethodChannel = MethodChannel(messenger, "com.cjx/x5WebView_$id")
 
@@ -33,6 +33,13 @@ class X5WebView(private val context: Context,private val id: Int,private val par
             settings.useWideViewPort = true
             settings.domStorageEnabled = true
             settings.javaScriptCanOpenWindowsAutomatically = true
+
+            if (params["javascriptChannels"] != null) {
+                val names = params["javascriptChannels"] as List<String>
+                for (name in names) {
+                    webView.addJavascriptInterface(JavascriptChannel(name, channel, context), name)
+                }
+            }
             loadUrl(params["url"].toString())
             webViewClient = object : WebViewClient() {
                 override fun shouldOverrideUrlLoading(view: WebView, url: String?): Boolean {

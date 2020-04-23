@@ -10,6 +10,7 @@
         android:name="io.flutter.app.FlutterApplication"
         android:icon="@mipmap/ic_launcher"
         android:label="x5_webview_example"
+        android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
             android:name=".MainActivity"

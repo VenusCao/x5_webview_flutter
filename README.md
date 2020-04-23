@@ -17,7 +17,7 @@ dependencies:
   x5_webview: ^x.x.x //最新版本见上方
 ```
 
-初始化x5。(安卓6.0+需在init之前请求动态权限，可以使用，详情见example/lib/main.dart)
+初始化x5。(安卓6.0+需在init之前请求动态权限，可以使用[permission_handler](https://pub.flutter-io.cn/packages/permission_handler)，详情见example/lib/main.dart)
 ```
 var isOk = await X5Sdk.init();
 print(isOk ? "X5内核成功加载" : "X5内核加载失败");
@@ -84,17 +84,14 @@ var body = await _controller.evaluateJavascript("document.body.innerHTML");
 ```
 * js调用flutter
 ```
-    var listName = ["X5Web", "Toast"];
-    _controller.addJavascriptChannels(listName, (name, data) {
-      switch (name) {
-        case "X5Web":
-          print(data);
-          break;
-        case "Toast":
-          print(data);
-          break;
-      }
-    });
+     X5WebView(
+        ...
+        javascriptChannels: JavascriptChannels(
+            ["X5Web", "Toast"], (name, data) {
+          switch (name) {
+            ...
+          }
+        }))
 ```
 * js代码
 ```

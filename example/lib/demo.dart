@@ -38,37 +38,52 @@ class _DemoWebViewPageState extends State<DemoWebViewPage> {
                     ? X5WebView(
                         url: url,
                         javaScriptEnabled: true,
+                        javascriptChannels: JavascriptChannels(
+                            ["X5Web", "Toast"], (name, data) {
+                          switch (name) {
+                            case "X5Web":
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      title: Text("获取到的字符串为："),
+                                      content: Text(data),
+                                    );
+                                  });
+                              break;
+                            case "Toast":
+                              print(data);
+                              break;
+                          }
+                        }),
                         onWebViewCreated: (control) {
                           _controller = control;
+//                          var listName = ["X5Web", "Toast"];
+//                          _controller.addJavascriptChannels(listName,
+//                                  (name, data) {
+//                                switch (name) {
+//                                  case "X5Web":
+//                                    showDialog(
+//                                        context: context,
+//                                        builder: (context) {
+//                                          return AlertDialog(
+//                                            title: Text("获取到的字符串为："),
+//                                            content: Text(data),
+//                                          );
+//                                        });
+//                                    break;
+//                                  case "Toast":
+//                                    print(data);
+//                                    break;
+//                                }
+//                              });
                         },
                         onPageFinished: () async {
-                          var isSuccess =
-                              await _controller.isX5WebViewLoadSuccess();
-                          print(isSuccess ? "x5内核加载成功" : "x5内核加载失败");
                           var url = await _controller.currentUrl();
                           print(url);
-                          var listName = ["X5Web", "Toast"];
-                          _controller.addJavascriptChannels(listName,
-                              (name, data) {
-                            switch (name) {
-                              case "X5Web":
-                                showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return AlertDialog(
-                                        title: Text("获取到的字符串为："),
-                                        content: Text(data),
-                                      );
-                                    });
-                                break;
-                              case "Toast":
-                                print(data);
-                                break;
-                            }
-                          });
                         },
                         onProgressChanged: (progress) {
-                          print("webview加载进度------$progress");
+                          print("webview加载进度------$progress%");
                         },
                       )
                     :

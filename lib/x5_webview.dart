@@ -19,6 +19,7 @@ class X5WebView extends StatefulWidget {
   final HideCustomViewCallback onHideCustomView;
   final ProgressChangedCallback onProgressChanged;
   final bool javaScriptEnabled;
+  final JavascriptChannels javascriptChannels;
 
   const X5WebView(
       {Key key,
@@ -28,6 +29,7 @@ class X5WebView extends StatefulWidget {
       this.onPageFinished,
       this.onShowCustomView,
       this.onHideCustomView,
+      this.javascriptChannels,
       this.onProgressChanged})
       : super(key: key);
 
@@ -94,6 +96,9 @@ class X5WebViewController {
     });
   }
 
+
+///  直接使用X5WebView(javascriptChannels:JavascriptChannels(names, (name, data) { }))
+  @deprecated
   Future<void> addJavascriptChannels(
       List<String> names, MessageReceived callback) async {
     assert(names != null);
@@ -145,6 +150,12 @@ class X5WebViewController {
           _widget.onPageFinished();
         }
         break;
+      case "onJavascriptChannelCallBack":
+        if (_widget.javascriptChannels.callback != null) {
+          Map arg = call.arguments;
+          _widget.javascriptChannels.callback(arg["name"], arg["msg"]);
+        }
+        break;
       case "onShowCustomView":
         if (_widget.onShowCustomView != null) {
           _widget.onShowCustomView();
@@ -170,22 +181,28 @@ class X5WebViewController {
 }
 
 class _CreationParams {
-  _CreationParams({this.url, this.javaScriptEnabled, this.jsChannelName});
+  _CreationParams({this.url, this.javaScriptEnabled, this.javascriptChannels});
 
   static _CreationParams fromWidget(X5WebView widget) {
     return _CreationParams(
-        url: widget.url, javaScriptEnabled: widget.javaScriptEnabled);
+        url: widget.url, javaScriptEnabled: widget.javaScriptEnabled,javascriptChannels:widget.javascriptChannels.names);
   }
 
   final String url;
   final bool javaScriptEnabled;
-  final String jsChannelName;
+  final List<String> javascriptChannels;
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'url': url,
       'javaScriptEnabled': javaScriptEnabled,
-      "jsChannelName": jsChannelName
+      "javascriptChannels": javascriptChannels
     };
   }
+}
+
+class JavascriptChannels{
+  List<String> names;
+  MessageReceived callback;
+  JavascriptChannels(this.names,this.callback);
 }
