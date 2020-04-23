@@ -155,9 +155,13 @@ class _HomePageState extends State<HomePage> {
                 onPressed: () async {
                   showInputDialog(
                       onConfirm: (url) async {
-                        await X5Sdk.openWebActivity(url, title: "web页面");
+                        await X5Sdk.openWebActivity(url, title: "web页面",callback: (url,headers){
+                          print("拦截到url================$url");
+                          print("headers================$headers");
+                          X5Sdk.openWebActivity(url,headers: headers);
+                        });
                       },
-                      defaultText: "https://baidu.com");
+                      defaultText: "https://www.baidu.com");
                 },
                 child: Text("x5webviewActivity")),
             RaisedButton(

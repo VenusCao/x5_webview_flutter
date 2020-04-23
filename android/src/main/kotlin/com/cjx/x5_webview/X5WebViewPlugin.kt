@@ -30,11 +30,11 @@ class X5WebViewPlugin : MethodCallHandler, FlutterPlugin, ActivityAware {
 
     var mContext: Context? = null
     var mActivity: Activity? = null
-    var methodChannel: MethodChannel? = null
     var mFlutterPluginBinding: FlutterPlugin.FlutterPluginBinding? = null
 
     //兼容旧方式集成插件
     companion object {
+        var methodChannel: MethodChannel? = null
         @JvmStatic
         fun registerWith(registrar: Registrar) {
             val channel = MethodChannel(registrar.messenger(), "com.cjx/x5Video")
@@ -163,9 +163,13 @@ class X5WebViewPlugin : MethodCallHandler, FlutterPlugin, ActivityAware {
             "openWebActivity" -> {
                 val url = call.argument<String>("url")
                 val title = call.argument<String>("title")
+                val headers = call.argument<HashMap<String,String>>("headers")?:HashMap()
+                val isUrlIntercept=call.argument<Boolean>("isUrlIntercept")
                 val intent = Intent(mActivity, X5WebViewActivity::class.java)
                 intent.putExtra("url", url)
                 intent.putExtra("title", title)
+                intent.putExtra("headers", headers)
+                intent.putExtra("isUrlIntercept", isUrlIntercept)
                 mActivity?.startActivity(intent)
                 result.success(null)
             }

@@ -127,12 +127,25 @@ class X5Sdk {
   }
 
   ///打开简单的x5webview
-  static Future<void> openWebActivity(String url, {String title}) async {
+  static Future<void> openWebActivity(String url, {String title,Map<String,String> headers,InterceptUrlCallBack callback}) async {
     if (defaultTargetPlatform == TargetPlatform.android) {
       final Map<String, dynamic> params = <String, dynamic>{
         'title': title,
-        'url': url
+        'url': url,
+        'headers':headers,
+        'isUrlIntercept':callback!=null
       };
+      if(callback!=null){
+        _channel.setMethodCallHandler((call) {
+          if(call.method=="onUrlLoad"){
+            Map arg = call.arguments;
+            callback(arg["url"],arg["headers"]);
+          }
+          return;
+        });
+      }
+
+
       return await _channel.invokeMethod("openWebActivity", params);
     } else {
       return;
@@ -165,6 +178,8 @@ class X5Sdk {
 typedef void InstallFinish();
 typedef void DownloadFinish();
 typedef void DownloadProgress(int progress);
+
+typedef void InterceptUrlCallBack(String url,Map<String,String> headers);
 
 ///X5内核的下载和安装监听
 class X5SdkListener {
