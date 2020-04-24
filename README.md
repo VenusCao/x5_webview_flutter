@@ -117,6 +117,8 @@ X5Sdk.openWebActivity(url, title: "本地html示例");
     ```
 * 请使用真机测试，模拟器可能不能正常显示
 
+* 如果测试正常，打包后不能加载，可以尝试使用android studio打开android目录直接打包apk。
+
 * android9.0版本webview联不了网在manifest添加
     ```
     <application
@@ -137,6 +139,28 @@ X5Sdk.openWebActivity(url, title: "本地html示例");
                 android:resource="@xml/x5webview_file_paths" />
         </provider>  
     ```
+
+* X5Sdk.openWebActivity actionbar颜色自定义
+  ```
+  //1.
+  implementation "androidx.appcompat:appcompat:1.1.0"
+
+  //2.
+    <style name="AppTheme" parent="ThemeOverlay.AppCompat.Dark">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">#2196F3</item>
+        <item name="colorPrimaryDark">#1976D2</item>
+        <item name="colorAccent">#FF4081</item>
+        <item name="windowNoTitle">false</item>
+        <item name="windowActionBar">true</item>
+    </style>
+
+  //3.
+  <application
+        ...
+        android:theme="@style/AppTheme">
+
+  ```
 
 * 有比较急的问题可以加我QQ：793710663
 

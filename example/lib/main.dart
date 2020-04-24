@@ -29,7 +29,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   var crashInfo;
-
+  bool isLoadOk=false;
   @override
   void initState() {
     super.initState();
@@ -124,7 +124,7 @@ class _HomePageState extends State<HomePage> {
                                 var dir = await getExternalStorageDirectory();
                                 print(dir);
                                 var msg = await X5Sdk.openFile(
-                                    "${dir.path}/FileList.xlsx");
+                                    "${dir.path}/FileList.xlsx",style: "1",topBarBgColor: "#2196F3");
                                 print(msg);
                               },
                               child: Text("打开"),
@@ -177,7 +177,7 @@ class _HomePageState extends State<HomePage> {
                   loadX5();
                 },
                 child: Text("重新加载内核")),
-            Text("内核状态：\n${crashInfo ?? "未加载"}")
+            Text("内核状态：\n${crashInfo==null ? "未加载": isLoadOk? "加载成功---\n"+crashInfo.toString(): "加载失败---\n"+crashInfo.toString()}")
           ],
         ),
       ),
@@ -273,9 +273,13 @@ class _HomePageState extends State<HomePage> {
     print(isOk ? "X5内核成功加载" : "X5内核加载失败");
 
     var x5CrashInfo = await X5Sdk.getCrashInfo();
+    print(x5CrashInfo);
+    if(isOk){
+      x5CrashInfo="tbs_core_version" + x5CrashInfo.split("tbs_core_version")[1];
+    }
     setState(() {
-      print(x5CrashInfo);
-      crashInfo = "tbs_core_version" + x5CrashInfo.split("tbs_core_version")[1];
+      isLoadOk=isOk;
+      crashInfo = x5CrashInfo;
     });
 
     isLoad = true;

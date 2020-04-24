@@ -1,3 +1,9 @@
+## 0.2.2
+
+* X5WebviewActivity新增header和url拦截
+* X5WebView addJavascriptChannels变更
+* demo增加动态权限、actionBar样式修改以及内核状态查看
+
 ## 0.2.1
 
 * 兼容新旧两种插件api(详情见manifest和MainActivity的注释)
