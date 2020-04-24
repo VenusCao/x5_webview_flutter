@@ -154,12 +154,8 @@ class _HomePageState extends State<HomePage> {
             RaisedButton(
                 onPressed: () async {
                   showInputDialog(
-                      onConfirm: (url) async {
-                        await X5Sdk.openWebActivity(url, title: "web页面",callback: (url,headers){
-                          print("拦截到url================$url");
-                          print("headers================$headers");
-                          X5Sdk.openWebActivity(url,headers: headers);
-                        });
+                      onConfirm: (url){
+                        openUrl(url);
                       },
                       defaultText: "https://www.baidu.com");
                 },
@@ -300,6 +296,15 @@ class _HomePageState extends State<HomePage> {
             ],
           );
         });
+  }
+
+  void openUrl(String url) {
+    X5Sdk.openWebActivity(url, title: "web页面",callback: (url,headers){
+      print("拦截到url================$url");
+      print("headers================$headers");
+      //可以递归无限套娃
+      openUrl(url);
+    });
   }
 }
 

@@ -24,11 +24,15 @@
 
     <application>
         <uses-library android:name="org.apache.http.legacy" android:required="false"/>
+<!--        <activity android:name=".X5WebViewActivity"-->
+<!--            android:configChanges="orientation|screenSize|keyboardHidden"-->
+<!--            android:exported="false"-->
+<!--            android:launchMode="singleTask"-->
+<!--            android:alwaysRetainTaskState="true"-->
+<!--            android:windowSoftInputMode="stateHidden|adjustResize"-->
+<!--            ></activity>-->
         <activity android:name=".X5WebViewActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            android:exported="false"
-            android:launchMode="singleTask"
-            android:alwaysRetainTaskState="true"
             android:windowSoftInputMode="stateHidden|adjustResize"
             ></activity>
         <activity
