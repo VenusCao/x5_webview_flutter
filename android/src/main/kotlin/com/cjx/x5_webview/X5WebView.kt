@@ -2,7 +2,6 @@ package com.cjx.x5_webview
 
 import android.annotation.TargetApi
 import android.content.Context
-import android.hardware.display.DisplayManager
 import android.os.Build
 import android.view.View
 import com.tencent.smtt.export.external.interfaces.IX5WebChromeClient
@@ -18,15 +17,11 @@ import io.flutter.plugin.platform.PlatformView
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
 class X5WebView(private val context: Context, private val id: Int, private val params: Map<String, Any>, val messenger: BinaryMessenger? = null, private val containerView: View?) : PlatformView, MethodChannel.MethodCallHandler {
-    private var webView: InputAwareWebView
+    private var webView: WebView
     private val channel: MethodChannel = MethodChannel(messenger, "com.cjx/x5WebView_$id")
 
     init {
-        val displayListenerProxy = DisplayListenerProxy()
-        val displayManager = context.getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
-        displayListenerProxy.onPreWebViewInitialization(displayManager)
-        webView = InputAwareWebView(context, containerView)
-        displayListenerProxy.onPostWebViewInitialization(displayManager)
+        webView = WebView(context)
         channel.setMethodCallHandler(this)
         webView.apply {
             settings.javaScriptEnabled = params["javaScriptEnabled"] as Boolean
@@ -93,21 +88,6 @@ class X5WebView(private val context: Context, private val id: Int, private val p
 
     }
 
-    override fun onFlutterViewDetached() {
-        webView.setContainerView(null)
-    }
-
-    override fun onFlutterViewAttached(flutterView: View) {
-        webView.setContainerView(flutterView)
-    }
-
-    override fun onInputConnectionUnlocked() {
-        webView.isLockInputConnection(false)
-    }
-
-    override fun onInputConnectionLocked() {
-        webView.isLockInputConnection(true)
-    }
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         when (call.method) {
@@ -182,7 +162,6 @@ class X5WebView(private val context: Context, private val id: Int, private val p
 
     override fun dispose() {
         channel.setMethodCallHandler(null)
-        webView.dispose()
         webView.destroy()
     }
 }
