@@ -19,6 +19,18 @@ dependencies:
 
 初始化x5。(安卓6.0+需在init之前请求动态权限，可以使用[permission_handler](https://pub.flutter-io.cn/packages/permission_handler)，详情见example/lib/main.dart)
 ```
+//请求权限
+Map<Permission, PermissionStatus> statuses = await [
+      Permission.phone,
+      Permission.storage,
+    ].request();
+//判断权限
+if (!(statuses[Permission.phone].isGranted &&
+statuses[Permission.storage].isGranted)) {
+    print("权限被拒绝");
+    return;
+}
+
 var isOk = await X5Sdk.init();
 print(isOk ? "X5内核成功加载" : "X5内核加载失败");
 ```
@@ -41,7 +53,7 @@ var errorMsg = await X5Sdk.openFile("/sdcard/download/FileList.xlsx");
 print(errorMsg);
 ```
 
-## 使用内嵌webview(可能会有些bug)
+## 使用内嵌webview
 
 ```
 return Scaffold(
@@ -78,11 +90,12 @@ return Scaffold(
     );
 ```
 内嵌webview js与flutter互调
-* flutter调用js
+## flutter调用js
 ```
 var body = await _controller.evaluateJavascript("document.body.innerHTML");
 ```
-* js调用flutter
+## js调用flutter
+* flutter代码
 ```
      X5WebView(
         ...

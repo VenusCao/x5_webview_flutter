@@ -1,3 +1,8 @@
+## 0.2.3
+
+* 删除内嵌多余代码
+* 使用AndroidViewSurface解决内嵌的x5webview键盘问题
+
 ## 0.2.2
 
 * X5WebviewActivity新增header和url拦截

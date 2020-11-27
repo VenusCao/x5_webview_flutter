@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
@@ -41,18 +43,51 @@ class _X5WebViewState extends State<X5WebView> {
   @override
   Widget build(BuildContext context) {
     if (defaultTargetPlatform == TargetPlatform.android) {
-      return AndroidView(
-        viewType: 'com.cjx/x5WebView',
-        onPlatformViewCreated: _onPlatformViewCreated,
-        creationParamsCodec: const StandardMessageCodec(),
-        creationParams: _CreationParams.fromWidget(widget).toMap(),
-        layoutDirection: TextDirection.rtl,
+      //   return AndroidView(
+      //     viewType: 'com.cjx/x5WebView',
+      //     onPlatformViewCreated: _onPlatformViewCreated,
+      //     creationParamsCodec: const StandardMessageCodec(),
+      //     creationParams: _CreationParams.fromWidget(widget).toMap(),
+      //     layoutDirection: TextDirection.rtl,
+      //   );
+      // } else if (defaultTargetPlatform == TargetPlatform.iOS) {
+      //   //TODO 添加ios WebView
+      //   return Container();
+      // } else {
+      //   return Container();
+      return PlatformViewLink(
+        viewType: "com.cjx/x5WebView",
+        surfaceFactory: (_, controller) {
+          return AndroidViewSurface(
+            controller: controller,
+            gestureRecognizers: const <Factory<OneSequenceGestureRecognizer>>{},
+            hitTestBehavior: PlatformViewHitTestBehavior.opaque,
+          );
+        },
+        onCreatePlatformView: (params) {
+          return PlatformViewsService.initSurfaceAndroidView(
+            id: params.id,
+            viewType: 'com.cjx/x5WebView',
+            // WebView content is not affected by the Android view's layout direction,
+            // we explicitly set it here so that the widget doesn't require an ambient
+            // directionality.
+            layoutDirection: TextDirection.rtl,
+            creationParams: _CreationParams.fromWidget(widget).toMap(),
+            creationParamsCodec: const StandardMessageCodec(),
+          )
+            ..addOnPlatformViewCreatedListener(params.onPlatformViewCreated)
+            ..addOnPlatformViewCreatedListener((int id) {
+              _onPlatformViewCreated(id);
+              // if (onWebViewPlatformCreated == null) {
+              //   return;
+              // }
+              // onWebViewPlatformCreated(
+              //   MethodChannelWebViewPlatform(id, webViewPlatformCallbacksHandler),
+              // );
+            })
+            ..create();
+        },
       );
-    } else if (defaultTargetPlatform == TargetPlatform.iOS) {
-      //TODO 添加ios WebView
-      return Container();
-    } else {
-      return Container();
     }
   }
 
@@ -96,8 +131,7 @@ class X5WebViewController {
     });
   }
 
-
-///  直接使用X5WebView(javascriptChannels:JavascriptChannels(names, (name, data) { }))
+  ///  直接使用X5WebView(javascriptChannels:JavascriptChannels(names, (name, data) { }))
   @deprecated
   Future<void> addJavascriptChannels(
       List<String> names, MessageReceived callback) async {
@@ -185,7 +219,9 @@ class _CreationParams {
 
   static _CreationParams fromWidget(X5WebView widget) {
     return _CreationParams(
-        url: widget.url, javaScriptEnabled: widget.javaScriptEnabled,javascriptChannels:widget.javascriptChannels.names);
+        url: widget.url,
+        javaScriptEnabled: widget.javaScriptEnabled,
+        javascriptChannels: widget.javascriptChannels.names);
   }
 
   final String url;
@@ -201,8 +237,9 @@ class _CreationParams {
   }
 }
 
-class JavascriptChannels{
+class JavascriptChannels {
   List<String> names;
   MessageReceived callback;
-  JavascriptChannels(this.names,this.callback);
+
+  JavascriptChannels(this.names, this.callback);
 }
