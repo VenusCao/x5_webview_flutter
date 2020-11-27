@@ -38,6 +38,7 @@ class _DemoWebViewPageState extends State<DemoWebViewPage> {
                     ? X5WebView(
                         url: url,
                         javaScriptEnabled: true,
+                        header: {"TestHeader": "测试", "MSG": "在？在干嘛？吃饭了没？"},
                         javascriptChannels: JavascriptChannels(
                             ["X5Web", "Toast"], (name, data) {
                           switch (name) {
@@ -84,6 +85,24 @@ class _DemoWebViewPageState extends State<DemoWebViewPage> {
                         },
                         onProgressChanged: (progress) {
                           print("webview加载进度------$progress%");
+                        },
+                        onUrlLoading: (_url) {
+                          print(_url);
+                          showDialog(
+                              context: context,
+                              builder: (_) {
+                                return AlertDialog(
+                                  content: Text("url==$_url"),
+                                  actions: [
+                                    FlatButton(
+                                      child: Text("我知道了"),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                    )
+                                  ],
+                                );
+                              });
                         },
                       )
                     :

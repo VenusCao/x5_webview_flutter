@@ -18,7 +18,10 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: HomePage(),theme: ThemeData(primarySwatch: Colors.blue),);
+    return MaterialApp(
+      home: HomePage(),
+      theme: ThemeData(primarySwatch: Colors.blue),
+    );
   }
 }
 
@@ -29,7 +32,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   var crashInfo;
-  bool isLoadOk=false;
+  bool isLoadOk = false;
   @override
   void initState() {
     super.initState();
@@ -124,7 +127,9 @@ class _HomePageState extends State<HomePage> {
                                 var dir = await getExternalStorageDirectory();
                                 print(dir);
                                 var msg = await X5Sdk.openFile(
-                                    "${dir.path}/FileList.xlsx",style: "1",topBarBgColor: "#2196F3");
+                                    "${dir.path}/FileList.xlsx",
+                                    style: "1",
+                                    topBarBgColor: "#2196F3");
                                 print(msg);
                               },
                               child: Text("打开"),
@@ -141,20 +146,33 @@ class _HomePageState extends State<HomePage> {
 //                              return DemoWebViewPage("http://bin.amazeui.org/tizayo");
 //                            }));
 
-                  showInputDialog(
-                      onConfirm: (url) {
-                        Navigator.of(context).push(
-                            CupertinoPageRoute(builder: (BuildContext context) {
-                          return DemoWebViewPage(url);
-                        }));
-                      },
-                      defaultText: "http://bin.amazeui.org/tizayo");
+                  //网络url
+                  // showInputDialog(
+                  //     onConfirm: (url) {
+                  //       Navigator.of(context).push(
+                  //           CupertinoPageRoute(builder: (BuildContext context) {
+                  //         return DemoWebViewPage(url);
+                  //       }));
+                  //     },
+                  //     defaultText: "http://bin.amazeui.org/tizayo");
+
+                  //本地html
+                  var fileHtmlContents =
+                      await rootBundle.loadString("assets/index.html");
+                  var url = Uri.dataFromString(fileHtmlContents,
+                          mimeType: 'text/html',
+                          encoding: Encoding.getByName('utf-8'))
+                      .toString();
+                  Navigator.of(context)
+                      .push(CupertinoPageRoute(builder: (BuildContext context) {
+                    return DemoWebViewPage(url);
+                  }));
                 },
                 child: Text("flutter内嵌x5webview")),
             RaisedButton(
                 onPressed: () async {
                   showInputDialog(
-                      onConfirm: (url){
+                      onConfirm: (url) {
                         openUrl(url);
                       },
                       defaultText: "https://www.baidu.com");
@@ -177,7 +195,8 @@ class _HomePageState extends State<HomePage> {
                   loadX5();
                 },
                 child: Text("重新加载内核")),
-            Text("内核状态：\n${crashInfo==null ? "未加载": isLoadOk? "加载成功---\n"+crashInfo.toString(): "加载失败---\n"+crashInfo.toString()}")
+            Text(
+                "内核状态：\n${crashInfo == null ? "未加载" : isLoadOk ? "加载成功---\n" + crashInfo.toString() : "加载失败---\n" + crashInfo.toString()}")
           ],
         ),
       ),
@@ -274,11 +293,12 @@ class _HomePageState extends State<HomePage> {
 
     var x5CrashInfo = await X5Sdk.getCrashInfo();
     print(x5CrashInfo);
-    if(isOk){
-      x5CrashInfo="tbs_core_version" + x5CrashInfo.split("tbs_core_version")[1];
+    if (isOk) {
+      x5CrashInfo =
+          "tbs_core_version" + x5CrashInfo.split("tbs_core_version")[1];
     }
     setState(() {
-      isLoadOk=isOk;
+      isLoadOk = isOk;
       crashInfo = x5CrashInfo;
     });
 
@@ -303,7 +323,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void openUrl(String url) {
-    X5Sdk.openWebActivity(url, title: "web页面",callback: (url,headers){
+    X5Sdk.openWebActivity(url, title: "web页面", callback: (url, headers) {
       print("拦截到url================$url");
       print("headers================$headers");
       //可以递归无限套娃

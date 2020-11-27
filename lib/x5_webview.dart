@@ -12,6 +12,7 @@ typedef void ShowCustomViewCallback();
 typedef void HideCustomViewCallback();
 typedef void ProgressChangedCallback(int progress);
 typedef void MessageReceived(String name, String data);
+typedef void UrlLoading(String url);
 
 class X5WebView extends StatefulWidget {
   final url;
@@ -22,6 +23,9 @@ class X5WebView extends StatefulWidget {
   final ProgressChangedCallback onProgressChanged;
   final bool javaScriptEnabled;
   final JavascriptChannels javascriptChannels;
+  final UrlLoading onUrlLoading;
+  final Map<String, String> header;
+  final String userAgentString;
 
   const X5WebView(
       {Key key,
@@ -32,7 +36,10 @@ class X5WebView extends StatefulWidget {
       this.onShowCustomView,
       this.onHideCustomView,
       this.javascriptChannels,
-      this.onProgressChanged})
+      this.onProgressChanged,
+      this.onUrlLoading,
+      this.header,
+      this.userAgentString})
       : super(key: key);
 
   @override
@@ -51,7 +58,7 @@ class _X5WebViewState extends State<X5WebView> {
       //     layoutDirection: TextDirection.rtl,
       //   );
       // } else if (defaultTargetPlatform == TargetPlatform.iOS) {
-      //   //TODO 添加ios WebView
+      //   // 添加ios WebView
       //   return Container();
       // } else {
       //   return Container();
@@ -88,6 +95,8 @@ class _X5WebViewState extends State<X5WebView> {
             ..create();
         },
       );
+    } else {
+      return Container();
     }
   }
 
@@ -206,6 +215,13 @@ class X5WebViewController {
           _widget.onProgressChanged(arg["progress"]);
         }
         break;
+      case "onUrlLoading":
+        if (_widget.onUrlLoading != null) {
+          Map arg = call.arguments;
+          _widget.onUrlLoading(arg["url"]);
+        }
+        break;
+
       default:
         throw MissingPluginException(
             '${call.method} was invoked but has no handler');
@@ -215,24 +231,39 @@ class X5WebViewController {
 }
 
 class _CreationParams {
-  _CreationParams({this.url, this.javaScriptEnabled, this.javascriptChannels});
+  _CreationParams(
+      {this.url,
+      this.javaScriptEnabled,
+      this.javascriptChannels,
+      this.urlInterceptEnabled,
+      this.header,
+      this.userAgentString});
 
   static _CreationParams fromWidget(X5WebView widget) {
     return _CreationParams(
         url: widget.url,
         javaScriptEnabled: widget.javaScriptEnabled,
-        javascriptChannels: widget.javascriptChannels.names);
+        javascriptChannels: widget.javascriptChannels.names,
+        urlInterceptEnabled: widget.onUrlLoading != null,
+        userAgentString: widget.userAgentString,
+        header: widget.header);
   }
 
   final String url;
   final bool javaScriptEnabled;
   final List<String> javascriptChannels;
+  final Map<String, String> header;
+  final bool urlInterceptEnabled;
+  final String userAgentString;
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'url': url,
       'javaScriptEnabled': javaScriptEnabled,
-      "javascriptChannels": javascriptChannels
+      "javascriptChannels": javascriptChannels,
+      "urlInterceptEnabled": urlInterceptEnabled,
+      "header": header,
+      "userAgentString": userAgentString
     };
   }
 }

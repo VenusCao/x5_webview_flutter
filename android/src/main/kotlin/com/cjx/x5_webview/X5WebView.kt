@@ -25,9 +25,10 @@ class X5WebView(private val context: Context, private val id: Int, private val p
         channel.setMethodCallHandler(this)
         webView.apply {
             settings.javaScriptEnabled = params["javaScriptEnabled"] as Boolean
-            settings.useWideViewPort = true
-            settings.domStorageEnabled = true
-            settings.javaScriptCanOpenWindowsAutomatically = true
+//            settings.useWideViewPort = true
+//            settings.domStorageEnabled = true
+//            settings.javaScriptCanOpenWindowsAutomatically = true
+//                settings.layoutAlgorithm=LayoutAlgorithm.SINGLE_COLUMN
 
             if (params["javascriptChannels"] != null) {
                 val names = params["javascriptChannels"] as List<String>
@@ -35,14 +36,39 @@ class X5WebView(private val context: Context, private val id: Int, private val p
                     webView.addJavascriptInterface(JavascriptChannel(name, channel, context), name)
                 }
             }
-            loadUrl(params["url"].toString())
+            if (params["header"] != null) {
+                val header = params["header"] as Map<String, String>
+                loadUrl(params["url"].toString(), header)
+            } else {
+                loadUrl(params["url"].toString())
+            }
+
+            if(params["userAgentString"] != null){
+                settings.userAgentString=params["userAgentString"].toString()
+            }
+
+            val urlInterceptEnabled = params["urlInterceptEnabled"] as Boolean
+
             webViewClient = object : WebViewClient() {
-                override fun shouldOverrideUrlLoading(view: WebView, url: String?): Boolean {
+                override fun shouldOverrideUrlLoading(view: WebView, loadUrl: String?): Boolean {
+
+                    if (urlInterceptEnabled) {
+                        val arg = hashMapOf<String, String>()
+                        arg["url"] = loadUrl?:""
+                        channel.invokeMethod("onUrlLoading", arg)
+                        return true
+                    }
                     view.loadUrl(url)
                     return super.shouldOverrideUrlLoading(view, url)
                 }
 
                 override fun shouldOverrideUrlLoading(view: WebView, requset: WebResourceRequest?): Boolean {
+                    if (urlInterceptEnabled) {
+                        val arg = hashMapOf<String, String>()
+                        arg["url"] = requset?.url.toString()
+                        channel.invokeMethod("onUrlLoading", arg)
+                        return true
+                    }
                     view.loadUrl(requset?.url.toString())
                     return super.shouldOverrideUrlLoading(view, requset)
                 }
