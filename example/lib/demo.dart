@@ -39,6 +39,7 @@ class _DemoWebViewPageState extends State<DemoWebViewPage> {
                         url: url,
                         javaScriptEnabled: true,
                         header: {"TestHeader": "测试", "MSG": "在？在干嘛？吃饭了没？"},
+                        userAgentString: "aaaa",
                         javascriptChannels: JavascriptChannels(
                             ["X5Web", "Toast"], (name, data) {
                           switch (name) {

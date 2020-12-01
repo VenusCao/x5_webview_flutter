@@ -1,6 +1,7 @@
 # x5_webview   [![pub package](https://img.shields.io/pub/v/x5_webview.svg)](https://pub.flutter-io.cn/packages/x5_webview)
 
 一个基于腾讯x5引擎的webview的flutter插件，暂时只支持android使用
+提示：之前内嵌webview出现的一系列问题得到解决，请更新到最新版试用，谢谢支持。
 
 ## x5内核介绍
 
@@ -47,7 +48,12 @@ X5Sdk.openWebActivity("https://www.baidu.com",title: "web页面");
     "https://ifeng.com-l-ifeng.com/20180528/7391_46b6cf3b/index.m3u8",screenMode: 102);
 ```
 
-打开本地文件(格式支持较多，视频音频图片办公文档压缩包等等，[支持文件详情](http://lc-qmtbhnki.cn-n1.lcfile.com/aa1b149fab1fd3c7d88b/%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F%E6%94%AF%E6%8C%81%E5%88%97%E8%A1%A8.xlsx))
+打开本地文件
+接入TBS可支持打开文件格式：doc、docx、ppt、pptx、xls、xlsx、pdf、txt、epub
+调用QQ浏览器可打开：rar（包含加密格式）、zip（包含加密格式）、tar、bz2、gz、7z（包含加密格式）、
+doc、docx、ppt、pptx、xls、xlsx、txt、pdf、epub、chm、html/htm、xml、mht、url、ini、log、
+bat、php、js、lrc、jpg、jpeg、png、gif、bmp、tiff 、webp、mp3、m4a、aac、amr、wav、ogg、mid、
+ra、wma、mpga、ape、flac
 ```
 var errorMsg = await X5Sdk.openFile("/sdcard/download/FileList.xlsx");
 print(errorMsg);
@@ -64,6 +70,12 @@ return Scaffold(
           ? X5WebView(
               url: "http://debugtbs.qq.com",
               javaScriptEnabled: true,
+              header: {"TestHeader": "测试"},
+              userAgentString: "my_ua",
+              //Url拦截，传null不会拦截会自动跳转
+              onUrlLoading: (willLoadUrl) {
+                _controller.loadUrl(willLoadUrl);
+              }
               onWebViewCreated: (control) {
                 _controller = control;
               },
@@ -89,7 +101,7 @@ return Scaffold(
             ),
     );
 ```
-内嵌webview js与flutter互调
+##内嵌webview js与flutter互调
 ## flutter调用js
 ```
 var body = await _controller.evaluateJavascript("document.body.innerHTML");
@@ -130,7 +142,10 @@ X5Sdk.openWebActivity(url, title: "本地html示例");
     ```
 * 请使用真机测试，模拟器可能不能正常显示
 
-* 如果测试正常，打包后不能加载，可以尝试使用android studio打开android目录直接打包apk。
+* 如果测试正常，打包后不能加载，可以尝试使用android studio打开android目录直接打包apk。或者使用以下命令行打包
+```
+flutter build apk --target-platform android-arm --no-shrink
+```
 
 * android9.0版本webview联不了网在manifest添加
     ```

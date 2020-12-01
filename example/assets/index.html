@@ -57,11 +57,8 @@
                 var msg=document.getElementById("input").value;
                 X5Web.postMessage(msg);
 			}
-			var req = new XMLHttpRequest();
-			req.open('GET', document.location.href, false);
-			req.send(null);
-			var headers = req.getAllResponseHeaders();
-			document.getElementById("headerText").innerText = "获取到的header:"+headers;
+            var ua=navigator.userAgent;
+            document.getElementById("headerText").innerText = "获取到的userAgent:"+ua;
 
 
 </script>
