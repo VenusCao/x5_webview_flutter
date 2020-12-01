@@ -1,7 +1,7 @@
 # x5_webview   [![pub package](https://img.shields.io/pub/v/x5_webview.svg)](https://pub.flutter-io.cn/packages/x5_webview)
 
-一个基于腾讯x5引擎的webview的flutter插件，暂时只支持android使用
-提示：之前内嵌webview出现的一系列问题得到解决，请更新到最新版试用，谢谢支持。
+* 一个基于腾讯x5引擎的webview的flutter插件，暂时只支持android使用
+* 提示：之前内嵌webview出现的一系列问题得到解决，请更新到最新版试用，谢谢支持。
 
 ## x5内核介绍
 
@@ -12,13 +12,13 @@
 
 [pub地址](https://pub.flutter-io.cn/packages/x5_webview)
 
-pubspec.yaml文件添加
+* pubspec.yaml文件添加
 ```
 dependencies:
   x5_webview: ^x.x.x //最新版本见上方
 ```
 
-初始化x5。(安卓6.0+需在init之前请求动态权限，可以使用[permission_handler](https://pub.flutter-io.cn/packages/permission_handler)，详情见example/lib/main.dart)
+* 初始化x5。(安卓6.0+需在init之前请求动态权限，可以使用[permission_handler](https://pub.flutter-io.cn/packages/permission_handler)，详情见example/lib/main.dart)
 ```
 //请求权限
 Map<Permission, PermissionStatus> statuses = await [
@@ -36,19 +36,18 @@ var isOk = await X5Sdk.init();
 print(isOk ? "X5内核成功加载" : "X5内核加载失败");
 ```
 
-如果你只是想要简单的展示web页面，可使用以下代码直接打开一个webActivity，
-性能更佳(推荐使用，视频播放也可以这个api)
+* 如果你只是想要简单的展示web页面，可使用以下代码直接打开一个webActivity，性能更佳(推荐使用，视频播放也可以这个api)
 ```
 X5Sdk.openWebActivity("https://www.baidu.com",title: "web页面");
 ```
 
-使用TBSPlayer直接全屏播放视频(screenMode自行测试，103横屏 104竖屏，官方默认使用102第一次点击全屏无反应)
+* 使用TBSPlayer直接全屏播放视频(screenMode自行测试，103横屏 104竖屏，官方默认使用102第一次点击全屏无反应)
 ```
     var isOk = await X5Sdk.openVideo(
     "https://ifeng.com-l-ifeng.com/20180528/7391_46b6cf3b/index.m3u8",screenMode: 102);
 ```
 
-打开本地文件
+* 打开本地文件
 接入TBS可支持打开文件格式：doc、docx、ppt、pptx、xls、xlsx、pdf、txt、epub
 调用QQ浏览器可打开：rar（包含加密格式）、zip（包含加密格式）、tar、bz2、gz、7z（包含加密格式）、
 doc、docx、ppt、pptx、xls、xlsx、txt、pdf、epub、chm、html/htm、xml、mht、url、ini、log、
@@ -101,7 +100,7 @@ return Scaffold(
             ),
     );
 ```
-##内嵌webview js与flutter互调
+## 内嵌webview js与flutter互调
 ## flutter调用js
 ```
 var body = await _controller.evaluateJavascript("document.body.innerHTML");
