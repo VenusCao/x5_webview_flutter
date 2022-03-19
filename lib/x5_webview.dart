@@ -16,19 +16,19 @@ typedef void UrlLoading(String url);
 
 class X5WebView extends StatefulWidget {
   final url;
-  final X5WebViewCreatedCallback onWebViewCreated;
-  final PageFinishedCallback onPageFinished;
-  final ShowCustomViewCallback onShowCustomView;
-  final HideCustomViewCallback onHideCustomView;
-  final ProgressChangedCallback onProgressChanged;
+  final X5WebViewCreatedCallback? onWebViewCreated;
+  final PageFinishedCallback? onPageFinished;
+  final ShowCustomViewCallback? onShowCustomView;
+  final HideCustomViewCallback? onHideCustomView;
+  final ProgressChangedCallback? onProgressChanged;
   final bool javaScriptEnabled;
-  final JavascriptChannels javascriptChannels;
-  final UrlLoading onUrlLoading;
-  final Map<String, String> header;
-  final String userAgentString;
+  final JavascriptChannels? javascriptChannels;
+  final UrlLoading? onUrlLoading;
+  final Map<String, String>? header;
+  final String? userAgentString;
 
   const X5WebView(
-      {Key key,
+      {Key? key,
       this.url,
       this.javaScriptEnabled = false,
       this.onWebViewCreated,
@@ -66,7 +66,7 @@ class _X5WebViewState extends State<X5WebView> {
         viewType: "com.cjx/x5WebView",
         surfaceFactory: (_, controller) {
           return AndroidViewSurface(
-            controller: controller,
+            controller: controller as AndroidViewController,
             gestureRecognizers: const <Factory<OneSequenceGestureRecognizer>>{},
             hitTestBehavior: PlatformViewHitTestBehavior.opaque,
           );
@@ -105,7 +105,7 @@ class _X5WebViewState extends State<X5WebView> {
       return;
     }
     final X5WebViewController controller = X5WebViewController._(id, widget);
-    widget.onWebViewCreated(controller);
+    widget.onWebViewCreated!(controller);
   }
 }
 
@@ -121,21 +121,19 @@ class X5WebViewController {
 
   final MethodChannel _channel;
 
-  Future<void> loadUrl(String url, {Map<String, String> headers}) async {
-    assert(url != null);
-    return _channel.invokeMethod('loadUrl', {
+  Future<void> loadUrl(String url, {Map<String, String>? headers}) async {
+    return await _channel.invokeMethod('loadUrl', {
       'url': url,
       'headers': headers,
     });
   }
 
   Future<bool> isX5WebViewLoadSuccess() async {
-    return _channel.invokeMethod('isX5WebViewLoadSuccess');
+    return await _channel.invokeMethod('isX5WebViewLoadSuccess');
   }
 
   Future<String> evaluateJavascript(String js) async {
-    assert(js != null);
-    return _channel.invokeMethod('evaluateJavascript', {
+    return await _channel.invokeMethod('evaluateJavascript', {
       'js': js,
     });
   }
@@ -144,98 +142,94 @@ class X5WebViewController {
   @deprecated
   Future<void> addJavascriptChannels(
       List<String> names, MessageReceived callback) async {
-    assert(names != null);
     await _channel.invokeMethod("addJavascriptChannels", {'names': names});
-    _channel.setMethodCallHandler((call) {
+    _channel.setMethodCallHandler((call) async {
       if (call.method == "onJavascriptChannelCallBack") {
         Map arg = call.arguments;
         callback(arg["name"], arg["msg"]);
       }
-      return;
     });
   }
 
   Future<void> goBackOrForward(int i) async {
-    assert(i != null);
-    return _channel.invokeMethod('goBackOrForward', {
+    return await _channel.invokeMethod('goBackOrForward', {
       'i': i,
     });
   }
 
   Future<bool> canGoBack() async {
-    return _channel.invokeMethod('canGoBack');
+    return await _channel.invokeMethod('canGoBack');
   }
 
   Future<bool> canGoForward() async {
-    return _channel.invokeMethod('canGoForward');
+    return await _channel.invokeMethod('canGoForward');
   }
 
   Future<void> goBack() async {
-    return _channel.invokeMethod('goBack');
+    return await _channel.invokeMethod('goBack');
   }
 
   Future<void> goForward() async {
-    return _channel.invokeMethod('goForward');
+    return await _channel.invokeMethod('goForward');
   }
 
   Future<void> reload() async {
-    return _channel.invokeMethod('reload');
+    return await _channel.invokeMethod('reload');
   }
 
   Future<String> currentUrl() async {
-    return _channel.invokeMethod('currentUrl');
+    return await _channel.invokeMethod('currentUrl');
   }
 
   Future _onMethodCall(MethodCall call) async {
     switch (call.method) {
       case "onPageFinished":
         if (_widget.onPageFinished != null) {
-          _widget.onPageFinished();
+          _widget.onPageFinished!();
         }
         break;
       case "onJavascriptChannelCallBack":
-        if (_widget.javascriptChannels.callback != null) {
+        if (_widget.javascriptChannels?.callback != null) {
           Map arg = call.arguments;
-          _widget.javascriptChannels.callback(arg["name"], arg["msg"]);
+          _widget.javascriptChannels?.callback(arg["name"], arg["msg"]);
         }
         break;
       case "onShowCustomView":
         if (_widget.onShowCustomView != null) {
-          _widget.onShowCustomView();
+          _widget.onShowCustomView!();
         }
         break;
       case "onHideCustomView":
         if (_widget.onHideCustomView != null) {
-          _widget.onHideCustomView();
+          _widget.onHideCustomView!();
         }
         break;
       case "onProgressChanged":
         if (_widget.onProgressChanged != null) {
           Map arg = call.arguments;
-          _widget.onProgressChanged(arg["progress"]);
+          _widget.onProgressChanged!(arg["progress"]);
         }
         break;
       case "onUrlLoading":
         if (_widget.onUrlLoading != null) {
           Map arg = call.arguments;
-          _widget.onUrlLoading(arg["url"]);
+          _widget.onUrlLoading!(arg["url"]);
         }
         break;
 
       default:
         throw MissingPluginException(
             '${call.method} was invoked but has no handler');
-        break;
     }
   }
 }
 
 class _CreationParams {
   _CreationParams(
-      {this.url,
-      this.javaScriptEnabled,
+      {required this.url,
+      this.javaScriptEnabled = true,
       this.javascriptChannels,
-      this.urlInterceptEnabled,
+      this.urlInterceptEnabled = false,
       this.header,
       this.userAgentString});
 
@@ -243,7 +237,7 @@ class _CreationParams {
     return _CreationParams(
         url: widget.url,
         javaScriptEnabled: widget.javaScriptEnabled,
-        javascriptChannels: widget.javascriptChannels.names,
+        javascriptChannels: widget.javascriptChannels?.names,
         urlInterceptEnabled: widget.onUrlLoading != null,
         userAgentString: widget.userAgentString,
         header: widget.header);
@@ -251,10 +245,10 @@ class _CreationParams {
 
   final String url;
   final bool javaScriptEnabled;
-  final List<String> javascriptChannels;
-  final Map<String, String> header;
+  final List<String>? javascriptChannels;
+  final Map<String, String>? header;
   final bool urlInterceptEnabled;
-  final String userAgentString;
+  final String? userAgentString;
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
