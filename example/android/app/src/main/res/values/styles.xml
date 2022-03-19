@@ -6,7 +6,7 @@
         <item name="android:windowBackground">@drawable/launch_background</item>
     </style>
 <!--<style name="AppTheme" parent="ThemeOverlay.AppCompat.Light">-->
-    <style name="AppTheme" parent="ThemeOverlay.AppCompat.Dark">
+    <style name="AppTheme" parent="ThemeOverlay.AppCompat.Light">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">#2196F3</item>
         <item name="colorPrimaryDark">#1976D2</item>

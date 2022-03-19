@@ -101,11 +101,12 @@ return Scaffold(
     );
 ```
 ## 内嵌webview js与flutter互调
-## flutter调用js
+
+### flutter调用js
 ```
 var body = await _controller.evaluateJavascript("document.body.innerHTML");
 ```
-## js调用flutter
+### js调用flutter
 * flutter代码
 ```
      X5WebView(
@@ -134,7 +135,7 @@ X5Sdk.openWebActivity(url, title: "本地html示例");
 ```
 
 ## 注意事项
-* 该插件暂时只支持Android手机，IOS会使用无效。ios可使用[webview_flutter](https://pub.flutter-io.cn/packages/webview_flutter)或其他已实现IOS WXWebView插件
+* 该插件暂时只支持Android手机，IOS会使用无效。ios可使用[webview_flutter](https://pub.flutter-io.cn/packages/webview_flutter)或其他已实现IOS WKWebView插件
 * 一般手机安装了QQ，微信，QQ浏览器等软件，手机里自动会有X5内核，如果没有X5内核会在wifi下自动下载，X5内核没有加载成功会自动使用系统内核[官网说明](https://x5.tencent.com/tbs/technical.html#/list/sdk/916172a5-f14e-40ed-9915-eaf74e9acba8/%E5%8A%A0%E8%BD%BD%E7%B1%BB)。详细配置可用手机打开以下链接查看X5内核的详情
     ```
     http://debugtbs.qq.com
