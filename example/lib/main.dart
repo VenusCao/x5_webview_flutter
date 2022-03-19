@@ -1,15 +1,14 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:x5_webview/x5_sdk.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:x5_webview/x5_sdk.dart';
 
 import 'demo.dart';
-
-import 'package:dio/dio.dart';
 
 void main() {
   runApp(MyApp());
@@ -63,7 +62,7 @@ class _HomePageState extends State<HomePage> {
                           await X5Sdk.openVideo(url, screenMode: 102);
                         },
                         defaultText:
-                            "https://youku.com-l-youku.com/20181221/5625_d9733a43/index.m3u8");
+                            "https://vod1.bdzybf7.com/20220317/gmsCUKVk/index.m3u8");
                   } else {
                     print("x5Video不可用");
                   }

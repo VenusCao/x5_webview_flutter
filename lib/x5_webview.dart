@@ -30,7 +30,7 @@ class X5WebView extends StatefulWidget {
   const X5WebView(
       {Key? key,
       this.url,
-      this.javaScriptEnabled = false,
+      this.javaScriptEnabled = true,
       this.onWebViewCreated,
       this.onPageFinished,
       this.onShowCustomView,
