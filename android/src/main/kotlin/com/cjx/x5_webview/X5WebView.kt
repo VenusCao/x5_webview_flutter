@@ -3,6 +3,7 @@ package com.cjx.x5_webview
 import android.annotation.TargetApi
 import android.content.Context
 import android.os.Build
+import android.util.Log
 import android.view.View
 import com.tencent.smtt.export.external.interfaces.IX5WebChromeClient
 import com.tencent.smtt.export.external.interfaces.WebResourceRequest
@@ -17,11 +18,10 @@ import io.flutter.plugin.platform.PlatformView
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
 class X5WebView(private val context: Context, private val id: Int, private val params: Map<String, Any>, val messenger: BinaryMessenger? = null, private val containerView: View?) : PlatformView, MethodChannel.MethodCallHandler {
-    private var webView: WebView
+    private var webView: WebView = WebView(context)
     private val channel: MethodChannel = MethodChannel(messenger, "com.cjx/x5WebView_$id")
 
     init {
-        webView = WebView(context)
         channel.setMethodCallHandler(this)
         webView.apply {
             settings.javaScriptEnabled = params["javaScriptEnabled"] as Boolean
@@ -118,6 +118,7 @@ class X5WebView(private val context: Context, private val id: Int, private val p
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         when (call.method) {
             "loadUrl" -> {
+                Log.e("cjxaaloadurl",call.arguments.toString())
                 val arg = call.arguments as Map<String, Any>
                 val url = arg["url"].toString()
                 val headers = arg["headers"] as? Map<String, String>

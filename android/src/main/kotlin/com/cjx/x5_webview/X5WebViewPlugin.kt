@@ -151,7 +151,12 @@ class X5WebViewPlugin : MethodCallHandler, FlutterPlugin, ActivityAware {
                 QbSdk.canOpenFile(mActivity, filePath) { canOpenFile ->
                     if (canOpenFile) {
                         QbSdk.openFileReader(mActivity, filePath, params) { msg ->
-                            Log.d("QbSdk", msg)
+                            Log.d("cjxQbSdk", msg)
+                            val close= listOf<String>("filepath error","TbsReaderDialogClosed","default browser","fileReaderClosed")
+                            if(close.contains(msg)){
+                                QbSdk.closeFileReader(mActivity)
+                                result.success(null)
+                            }
                         }
                     } else {
                         Toast.makeText(mContext, "X5Sdk无法打开此文件", Toast.LENGTH_LONG).show()

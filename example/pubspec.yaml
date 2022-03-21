@@ -17,9 +17,9 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   dio: ^3.0.9
-  webview_flutter: ^0.3.19+6
-  path_provider: ^1.6.5
-  permission_handler: ^5.0.0+hotfix.3
+  webview_flutter: ^3.0.1
+  path_provider: ^2.0.9
+  permission_handler: ^9.2.0
   x5_webview:
     path: ../
 
