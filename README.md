@@ -48,7 +48,7 @@ X5Sdk.openWebActivity("https://www.baidu.com",title: "web页面");
 ```
 
 * 打开本地文件
-接入TBS可支持打开文件格式：doc、docx、ppt、pptx、xls、xlsx、pdf、txt、epub
+接入TBS可支持打开文件格式：doc、docx、ppt、pptx、xls、xlsx、pdf、txt、epub  
 调用QQ浏览器可打开：rar（包含加密格式）、zip（包含加密格式）、tar、bz2、gz、7z（包含加密格式）、
 doc、docx、ppt、pptx、xls、xlsx、txt、pdf、epub、chm、html/htm、xml、mht、url、ini、log、
 bat、php、js、lrc、jpg、jpeg、png、gif、bmp、tiff 、webp、mp3、m4a、aac、amr、wav、ogg、mid、
@@ -135,6 +135,7 @@ X5Sdk.openWebActivity(url, title: "本地html示例");
 ```
 
 ## 注意事项
+* minSdkVersion 19以上
 * 该插件暂时只支持Android手机，IOS会使用无效。ios可使用[webview_flutter](https://pub.flutter-io.cn/packages/webview_flutter)或其他已实现IOS WKWebView插件
 * 一般手机安装了QQ，微信，QQ浏览器等软件，手机里自动会有X5内核，如果没有X5内核会在wifi下自动下载，X5内核没有加载成功会自动使用系统内核[官网说明](https://x5.tencent.com/tbs/technical.html#/list/sdk/916172a5-f14e-40ed-9915-eaf74e9acba8/%E5%8A%A0%E8%BD%BD%E7%B1%BB)。详细配置可用手机打开以下链接查看X5内核的详情
     ```
@@ -142,10 +143,24 @@ X5Sdk.openWebActivity(url, title: "本地html示例");
     ```
 * 请使用真机测试，模拟器可能不能正常显示
 
-* 如果测试正常，打包后不能加载，可以尝试使用android studio打开android目录直接打包apk。或者使用以下命令行打包
+* 如果测试正常加载，打包后不能加载，可以尝试使用android studio打开android目录直接打包apk。或者使用以下命令行打包
 ```
 flutter build apk --target-platform android-arm --no-shrink
+```  
+并增加混淆配置(详见example)  
 ```
+-dontwarn dalvik.**
+-dontwarn com.tencent.smtt.**
+
+-keep class com.tencent.smtt.** {
+    *;
+}
+
+-keep class com.tencent.tbs.** {
+    *;
+}
+```
+
 
 * android9.0版本webview联不了网在manifest添加
     ```
