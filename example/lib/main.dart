@@ -59,10 +59,9 @@ class _HomePageState extends State<HomePage> {
                   if (canUseTbsPlayer) {
                     showInputDialog(
                         onConfirm: (url) async {
-                          await X5Sdk.openVideo(url, screenMode: 102);
+                          await X5Sdk.openVideo(url, screenMode: 104);
                         },
-                        defaultText:
-                            "https://vod1.bdzybf7.com/20220317/gmsCUKVk/index.m3u8");
+                        defaultText: "https://vjs.zencdn.net/v/oceans.mp4");
                   } else {
                     print("x5Video不可用");
                   }

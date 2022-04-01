@@ -52,8 +52,13 @@ class X5Sdk {
     }
   }
 
-  ///screenMode 播放参数，103横屏全屏，104竖屏全屏。默认102
-  static Future<void> openVideo(String url, {int screenMode = 102}) async {
+  ///screenMode 播放参数，
+  ///102竖屏全屏(第一次点击全屏无效)
+  ///103横屏全屏(暂停后会报错)，
+  ///104竖屏全屏(默认)
+  ///105竖屏全屏(双击后才会出现面板)
+  ///默认104
+  static Future<void> openVideo(String url, {int screenMode = 104}) async {
     if (defaultTargetPlatform == TargetPlatform.android) {
       final Map<String, dynamic> params = <String, dynamic>{
         'screenMode': screenMode,
