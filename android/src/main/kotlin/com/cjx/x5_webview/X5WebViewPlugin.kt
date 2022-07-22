@@ -22,7 +22,7 @@ import io.flutter.plugin.common.PluginRegistry.Registrar
 import java.io.File
 
 class X5WebViewPlugin : MethodCallHandler, FlutterPlugin, ActivityAware {
-    constructor(mContext: Context,mActivity: Activity){
+    constructor(mContext: Context?,mActivity: Activity?){
         this.mActivity=mActivity
         this.mContext=mContext
     }
@@ -43,23 +43,23 @@ class X5WebViewPlugin : MethodCallHandler, FlutterPlugin, ActivityAware {
             registrar.platformViewRegistry().registerViewFactory("com.cjx/x5WebView", X5WebViewFactory(registrar.messenger(), registrar.activity(), registrar.view()))
         }
 
-        private fun setCallBack(channel: MethodChannel, activity: Activity) {
+        private fun setCallBack(channel: MethodChannel?, activity: Activity?) {
             QbSdk.setTbsListener(object : TbsListener {
                 override fun onInstallFinish(p0: Int) {
-                    activity.runOnUiThread {
-                        channel.invokeMethod("onInstallFinish", null)
+                    activity?.runOnUiThread {
+                        channel?.invokeMethod("onInstallFinish", null)
                     }
                 }
 
                 override fun onDownloadFinish(p0: Int) {
-                    activity.runOnUiThread {
-                        channel.invokeMethod("onDownloadFinish", null)
+                    activity?.runOnUiThread {
+                        channel?.invokeMethod("onDownloadFinish", null)
                     }
                 }
 
                 override fun onDownloadProgress(p0: Int) {
-                    activity.runOnUiThread {
-                        channel.invokeMethod("onDownloadProgress", p0)
+                    activity?.runOnUiThread {
+                        channel?.invokeMethod("onDownloadProgress", p0)
                     }
                 }
             })
@@ -206,9 +206,9 @@ class X5WebViewPlugin : MethodCallHandler, FlutterPlugin, ActivityAware {
         mContext = binding.applicationContext
 
         methodChannel = MethodChannel(binding.binaryMessenger, "com.cjx/x5Video")
-        methodChannel?.setMethodCallHandler(X5WebViewPlugin(mContext!!,mActivity!!))
-        setCallBack(methodChannel!!, mActivity!!)
-        binding.platformViewRegistry.registerViewFactory("com.cjx/x5WebView", X5WebViewFactory(binding.binaryMessenger, mActivity!!, null))
+        methodChannel?.setMethodCallHandler(X5WebViewPlugin(mContext,mActivity))
+        setCallBack(methodChannel, mActivity)
+        binding.platformViewRegistry.registerViewFactory("com.cjx/x5WebView", X5WebViewFactory(binding.binaryMessenger, mActivity, null))
     }
 
     override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
@@ -235,10 +235,10 @@ class X5WebViewPlugin : MethodCallHandler, FlutterPlugin, ActivityAware {
         }
         this.mActivity = binding.activity
         this.mContext = binding.activity.applicationContext
-        methodChannel = MethodChannel(mFlutterPluginBinding?.binaryMessenger, "com.cjx/x5Video")
-        methodChannel?.setMethodCallHandler(X5WebViewPlugin(mContext!!,mActivity!!))
-        setCallBack(methodChannel!!, mActivity!!)
-        mFlutterPluginBinding?.platformViewRegistry?.registerViewFactory("com.cjx/x5WebView", X5WebViewFactory(mFlutterPluginBinding?.binaryMessenger!!, mActivity!!, null))
+        methodChannel = MethodChannel(mFlutterPluginBinding?.binaryMessenger!!, "com.cjx/x5Video")
+        methodChannel?.setMethodCallHandler(X5WebViewPlugin(mContext,mActivity))
+        setCallBack(methodChannel, mActivity)
+        mFlutterPluginBinding?.platformViewRegistry?.registerViewFactory("com.cjx/x5WebView", X5WebViewFactory(mFlutterPluginBinding?.binaryMessenger, mActivity, null))
 
     }
 

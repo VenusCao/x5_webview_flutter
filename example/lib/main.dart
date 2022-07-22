@@ -55,16 +55,22 @@ class _HomePageState extends State<HomePage> {
                 child: Text("查看X5内核信息")),
             RaisedButton(
                 onPressed: () async {
-                  var canUseTbsPlayer = await X5Sdk.canUseTbsPlayer();
-                  if (canUseTbsPlayer) {
-                    showInputDialog(
-                        onConfirm: (url) async {
-                          await X5Sdk.openVideo(url, screenMode: 104);
-                        },
-                        defaultText: "https://vjs.zencdn.net/v/oceans.mp4");
-                  } else {
-                    print("x5Video不可用");
-                  }
+                  showInputDialog(
+                      onConfirm: (url) async {
+                        await X5Sdk.openVideo(url, screenMode: 104);
+                      },
+                      defaultText: "https://vjs.zencdn.net/v/oceans.mp4");
+
+                  // var canUseTbsPlayer = await X5Sdk.canUseTbsPlayer();
+                  // if (canUseTbsPlayer) {
+                  //   showInputDialog(
+                  //       onConfirm: (url) async {
+                  //         await X5Sdk.openVideo(url, screenMode: 104);
+                  //       },
+                  //       defaultText: "https://vjs.zencdn.net/v/oceans.mp4");
+                  // } else {
+                  //   print("x5Video不可用");
+                  // }
                 },
                 child: Text("x5video直接播放视频")),
             RaisedButton(

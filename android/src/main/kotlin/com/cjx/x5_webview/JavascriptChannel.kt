@@ -6,7 +6,7 @@ import android.os.Looper
 import android.webkit.JavascriptInterface
 import io.flutter.plugin.common.MethodChannel
 
-class JavascriptChannel(val name: String, val channel: MethodChannel, val context: Context) {
+class JavascriptChannel(private val name: String, private val channel: MethodChannel, private val context: Context?) {
 
     @JavascriptInterface
     fun postMessage(msg: String) {
@@ -16,7 +16,7 @@ class JavascriptChannel(val name: String, val channel: MethodChannel, val contex
             arg["msg"] = msg
             channel.invokeMethod("onJavascriptChannelCallBack", arg)
         }
-        val handler = Handler(context.mainLooper)
+        val handler = Handler(context?.mainLooper!!)
 
         if (handler.looper == Looper.myLooper()) {
             postRunnable.run()
