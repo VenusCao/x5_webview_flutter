@@ -41,13 +41,13 @@ print(isOk ? "X5内核成功加载" : "X5内核加载失败");
 X5Sdk.openWebActivity("https://www.baidu.com",title: "web页面");
 ```
 
-~~
-* 使用TBSPlayer直接全屏播放视频(screenMode自行测试，103横屏-暂停播放会报错，默认104竖屏)
+
+* ~~使用TBSPlayer直接全屏播放视频(screenMode自行测试，103横屏-暂停播放会报错，默认104竖屏)~~
 ```
     var isOk = await X5Sdk.openVideo(
     "https://ifeng.com-l-ifeng.com/20180528/7391_46b6cf3b/index.m3u8",screenMode: 104);
 ```
-~~
+
 
 * 打开本地文件  
 接入TBS可支持打开文件格式：doc、docx、ppt、pptx、xls、xlsx、pdf、txt、epub  
