@@ -38,6 +38,7 @@ class _DemoWebViewPageState extends State<DemoWebViewPage> {
                     ? X5WebView(
                         url: url,
                         javaScriptEnabled: true,
+                        domStorageEnabled: true,
                         header: {"TestHeader": "测试", "MSG": "在？在干嘛？吃饭了没？"},
                         userAgentString: "aaaa",
                         javascriptChannels: JavascriptChannels(
@@ -95,7 +96,7 @@ class _DemoWebViewPageState extends State<DemoWebViewPage> {
                                 return AlertDialog(
                                   content: Text("url==$_url"),
                                   actions: [
-                                    FlatButton(
+                                    TextButton(
                                       child: Text("我知道了"),
                                       onPressed: () {
                                         Navigator.pop(context);
@@ -125,7 +126,7 @@ class _DemoWebViewPageState extends State<DemoWebViewPage> {
 //                print(body);
                         },
                       )),
-            RaisedButton(
+            ElevatedButton(
               onPressed: () {
                 _controller.evaluateJavascript(
                     'document.getElementById("input").value="flutter调用js成功！"');

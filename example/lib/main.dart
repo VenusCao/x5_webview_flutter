@@ -47,13 +47,13 @@ class _HomePageState extends State<HomePage> {
       body: Center(
         child: ListView(
           children: <Widget>[
-            RaisedButton(
+            ElevatedButton(
                 onPressed: () async {
                   X5Sdk.openWebActivity("http://debugtbs.qq.com",
                       title: "X5内核信息");
                 },
                 child: Text("查看X5内核信息")),
-            RaisedButton(
+            ElevatedButton(
                 onPressed: () async {
                   showInputDialog(
                       onConfirm: (url) async {
@@ -73,7 +73,7 @@ class _HomePageState extends State<HomePage> {
                   // }
                 },
                 child: Text("x5video直接播放视频")),
-            RaisedButton(
+            ElevatedButton(
                 onPressed: () async {
                   showDialog(
                       context: context,
@@ -82,13 +82,13 @@ class _HomePageState extends State<HomePage> {
                           title: Text("X5Sdk打开本地文件示例"),
                           content: Text("请先下载再打开"),
                           actions: <Widget>[
-                            FlatButton(
+                            TextButton(
                               onPressed: () async {
                                 Navigator.pop(context);
                               },
                               child: Text("取消"),
                             ),
-                            FlatButton(
+                            TextButton(
                               onPressed: () async {
                                 try {
                                   showDialog(
@@ -126,7 +126,7 @@ class _HomePageState extends State<HomePage> {
                               },
                               child: Text("下载"),
                             ),
-                            FlatButton(
+                            TextButton(
                               onPressed: () async {
                                 var dir = await getExternalStorageDirectory();
                                 print(dir);
@@ -143,7 +143,7 @@ class _HomePageState extends State<HomePage> {
                       });
                 },
                 child: Text("x5sdk打开本地文件示例")),
-            RaisedButton(
+            ElevatedButton(
                 onPressed: () async {
 //                                          Navigator.of(context).push(
 //                            CupertinoPageRoute(builder: (BuildContext context) {
@@ -173,7 +173,7 @@ class _HomePageState extends State<HomePage> {
                   }));
                 },
                 child: Text("flutter内嵌x5webview")),
-            RaisedButton(
+            ElevatedButton(
                 onPressed: () async {
                   showInputDialog(
                       onConfirm: (url) {
@@ -182,7 +182,7 @@ class _HomePageState extends State<HomePage> {
                       defaultText: "https://www.baidu.com");
                 },
                 child: Text("x5webviewActivity")),
-            RaisedButton(
+            ElevatedButton(
                 onPressed: () async {
                   var fileHtmlContents =
                       await rootBundle.loadString("assets/index.html");
@@ -194,7 +194,7 @@ class _HomePageState extends State<HomePage> {
                   await X5Sdk.openWebActivity(url, title: "本地html示例");
                 },
                 child: Text("本地html")),
-            RaisedButton(
+            ElevatedButton(
                 onPressed: () async {
                   loadX5();
                 },
@@ -219,12 +219,12 @@ class _HomePageState extends State<HomePage> {
               controller: _controller,
             ),
             actions: <Widget>[
-              FlatButton(
+              TextButton(
                   onPressed: () {
                     Navigator.pop(context);
                   },
                   child: Text("取消")),
-              FlatButton(
+              TextButton(
                   onPressed: () async {
                     Navigator.pop(context);
                     onConfirm(_controller.text);
@@ -257,18 +257,18 @@ class _HomePageState extends State<HomePage> {
             return AlertDialog(
               content: Text("请同意所有权限后再尝试加载X5"),
               actions: [
-                FlatButton(
+                TextButton(
                     onPressed: () {
                       Navigator.pop(context);
                     },
                     child: Text("取消")),
-                FlatButton(
+                TextButton(
                     onPressed: () {
                       Navigator.pop(context);
                       loadX5();
                     },
                     child: Text("再次加载")),
-                FlatButton(
+                TextButton(
                     onPressed: () {
                       Navigator.pop(context);
                       openAppSettings();
@@ -316,7 +316,7 @@ class _HomePageState extends State<HomePage> {
           return AlertDialog(
             content: Text(msg),
             actions: [
-              FlatButton(
+              TextButton(
                   onPressed: () {
                     Navigator.pop(context);
                   },

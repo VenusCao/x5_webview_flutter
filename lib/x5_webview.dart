@@ -22,6 +22,7 @@ class X5WebView extends StatefulWidget {
   final HideCustomViewCallback? onHideCustomView;
   final ProgressChangedCallback? onProgressChanged;
   final bool javaScriptEnabled;
+  final bool domStorageEnabled;
   final JavascriptChannels? javascriptChannels;
   final UrlLoading? onUrlLoading;
   final Map<String, String>? header;
@@ -39,6 +40,7 @@ class X5WebView extends StatefulWidget {
       this.onProgressChanged,
       this.onUrlLoading,
       this.header,
+      this.domStorageEnabled = true,
       this.userAgentString})
       : super(key: key);
 
@@ -228,6 +230,7 @@ class _CreationParams {
   _CreationParams(
       {required this.url,
       this.javaScriptEnabled = true,
+      this.domStorageEnabled = true,
       this.javascriptChannels,
       this.urlInterceptEnabled = false,
       this.header,
@@ -237,6 +240,7 @@ class _CreationParams {
     return _CreationParams(
         url: widget.url,
         javaScriptEnabled: widget.javaScriptEnabled,
+        domStorageEnabled: widget.domStorageEnabled,
         javascriptChannels: widget.javascriptChannels?.names,
         urlInterceptEnabled: widget.onUrlLoading != null,
         userAgentString: widget.userAgentString,
@@ -245,6 +249,7 @@ class _CreationParams {
 
   final String url;
   final bool javaScriptEnabled;
+  final bool domStorageEnabled;
   final List<String>? javascriptChannels;
   final Map<String, String>? header;
   final bool urlInterceptEnabled;
@@ -254,6 +259,7 @@ class _CreationParams {
     return <String, dynamic>{
       'url': url,
       'javaScriptEnabled': javaScriptEnabled,
+      'domStorageEnabled': domStorageEnabled,
       "javascriptChannels": javascriptChannels,
       "urlInterceptEnabled": urlInterceptEnabled,
       "header": header,
