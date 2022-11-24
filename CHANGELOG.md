@@ -1,3 +1,7 @@
+## 0.3.3
+
+* 内嵌调整
+
 ## 0.3.2
 
 * 增加domStorageEnabled

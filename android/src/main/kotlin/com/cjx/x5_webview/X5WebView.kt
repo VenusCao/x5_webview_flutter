@@ -24,7 +24,7 @@ class X5WebView(private val context: Context?, private val id: Int, private val 
     init {
         channel.setMethodCallHandler(this)
         webView.apply {
-            settings.useWideViewPort = true
+//            settings.useWideViewPort = true
             settings.javaScriptEnabled = params["javaScriptEnabled"] as Boolean
             settings.domStorageEnabled = params["domStorageEnabled"] as Boolean
 //            settings.javaScriptCanOpenWindowsAutomatically = true
