@@ -3,14 +3,12 @@ package com.cjx.x5_webview
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import com.tencent.smtt.export.external.TbsCoreSettings
-import com.tencent.smtt.sdk.QbSdk
-import com.tencent.smtt.sdk.TbsListener
-import com.tencent.smtt.sdk.TbsVideo
-import com.tencent.smtt.sdk.WebView
+import com.tencent.smtt.sdk.*
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
@@ -22,50 +20,14 @@ import io.flutter.plugin.common.PluginRegistry.Registrar
 import java.io.File
 
 class X5WebViewPlugin : MethodCallHandler, FlutterPlugin, ActivityAware {
-    constructor(mContext: Context?,mActivity: Activity?){
-        this.mActivity=mActivity
-        this.mContext=mContext
-    }
-    constructor()
 
     var mContext: Context? = null
     var mActivity: Activity? = null
     var mFlutterPluginBinding: FlutterPlugin.FlutterPluginBinding? = null
-
-    //兼容旧方式集成插件
     companion object {
         var methodChannel: MethodChannel? = null
-        @JvmStatic
-        fun registerWith(registrar: Registrar) {
-            val channel = MethodChannel(registrar.messenger(), "com.cjx/x5Video")
-            channel.setMethodCallHandler(X5WebViewPlugin(registrar.context(),registrar.activity()))
-            setCallBack(channel, registrar.activity())
-            registrar.platformViewRegistry().registerViewFactory("com.cjx/x5WebView", X5WebViewFactory(registrar.messenger(), registrar.activity(), registrar.view()))
-        }
-
-        private fun setCallBack(channel: MethodChannel?, activity: Activity?) {
-            QbSdk.setTbsListener(object : TbsListener {
-                override fun onInstallFinish(p0: Int) {
-                    activity?.runOnUiThread {
-                        channel?.invokeMethod("onInstallFinish", null)
-                    }
-                }
-
-                override fun onDownloadFinish(p0: Int) {
-                    activity?.runOnUiThread {
-                        channel?.invokeMethod("onDownloadFinish", null)
-                    }
-                }
-
-                override fun onDownloadProgress(p0: Int) {
-                    activity?.runOnUiThread {
-                        channel?.invokeMethod("onDownloadProgress", p0)
-                    }
-                }
-            })
-        }
+        var chooserCallback: ValueCallback<Uri>? = null
     }
-
 
     override fun onMethodCall(call: MethodCall, result: Result) {
         when (call.method) {
@@ -74,6 +36,20 @@ class X5WebViewPlugin : MethodCallHandler, FlutterPlugin, ActivityAware {
                 map[TbsCoreSettings.TBS_SETTINGS_USE_SPEEDY_CLASSLOADER] = true
                 map[TbsCoreSettings.TBS_SETTINGS_USE_DEXLOADER_SERVICE] = true
                 QbSdk.initTbsSettings(map)
+                QbSdk.setTbsListener(object : TbsListener {
+                    override fun onDownloadFinish(p0: Int) {
+                        methodChannel?.invokeMethod("onInstallFinish", null)
+                    }
+
+                    override fun onInstallFinish(p0: Int) {
+                        methodChannel?.invokeMethod("onDownloadFinish", null)
+                    }
+
+                    override fun onDownloadProgress(p0: Int) {
+                        methodChannel?.invokeMethod("onDownloadFinish", null)
+                    }
+
+                })
                 QbSdk.initX5Environment(mContext?.applicationContext, object : QbSdk.PreInitCallback {
                     override fun onCoreInitFinished() {
                         Log.e("X5Sdk","onCoreInitFinished")
@@ -196,20 +172,17 @@ class X5WebViewPlugin : MethodCallHandler, FlutterPlugin, ActivityAware {
 
     //新方式集成插件
     override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
-        Log.e("onAttachedToEngine", "onAttachedToEngine")
-        if (mActivity == null) {
-            Log.e("onAttachedToEngine", "mActivity==null")
-            mFlutterPluginBinding = binding
+        mFlutterPluginBinding = binding
+        if(mActivity==null){
             return
         }
-        mFlutterPluginBinding = binding
-        mContext = binding.applicationContext
+        this.mContext = mActivity
+        methodChannel = MethodChannel(mFlutterPluginBinding?.binaryMessenger!!, "com.cjx/x5Video")
+        methodChannel?.setMethodCallHandler(this)
+        mFlutterPluginBinding?.platformViewRegistry?.registerViewFactory("com.cjx/x5WebView", X5WebViewFactory(mFlutterPluginBinding?.binaryMessenger, mActivity, null))
 
-        methodChannel = MethodChannel(binding.binaryMessenger, "com.cjx/x5Video")
-        methodChannel?.setMethodCallHandler(X5WebViewPlugin(mContext,mActivity))
-        setCallBack(methodChannel, mActivity)
-        binding.platformViewRegistry.registerViewFactory("com.cjx/x5WebView", X5WebViewFactory(binding.binaryMessenger, mActivity, null))
-    }
+
+}
 
     override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
         Log.e("onDetachedFromEngine", "onDetachedFromEngine")
@@ -217,6 +190,7 @@ class X5WebViewPlugin : MethodCallHandler, FlutterPlugin, ActivityAware {
         mFlutterPluginBinding = null
         methodChannel?.setMethodCallHandler(null)
         methodChannel = null
+        mContext=null
     }
 
     override fun onDetachedFromActivity() {
@@ -227,21 +201,36 @@ class X5WebViewPlugin : MethodCallHandler, FlutterPlugin, ActivityAware {
     }
 
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {
+        binding.addActivityResultListener { requestCode, resultCode, data ->
+
+
+            Log.e("--cjx","data:$data --- requestCode:$requestCode  resultCode:$resultCode")
+
+            if(data!=null&&requestCode==21211&&chooserCallback!=null){
+                chooserCallback?.onReceiveValue(data.data)
+            }else{
+                chooserCallback?.onReceiveValue(null)
+            }
+            chooserCallback=null
+
+            return@addActivityResultListener false
+        }
+        this.mActivity = binding.activity
+
         Log.e("onAttachedToActivity", "onAttachedToActivity")
         if (mFlutterPluginBinding == null) {
             Log.e("onAttachedToActivity", "mFlutterPluginBinding==null")
-            this.mActivity = binding.activity
             return
         }
-        this.mActivity = binding.activity
         this.mContext = binding.activity.applicationContext
         methodChannel = MethodChannel(mFlutterPluginBinding?.binaryMessenger!!, "com.cjx/x5Video")
-        methodChannel?.setMethodCallHandler(X5WebViewPlugin(mContext,mActivity))
-        setCallBack(methodChannel, mActivity)
+        methodChannel?.setMethodCallHandler(this)
         mFlutterPluginBinding?.platformViewRegistry?.registerViewFactory("com.cjx/x5WebView", X5WebViewFactory(mFlutterPluginBinding?.binaryMessenger, mActivity, null))
+
 
     }
 
     override fun onDetachedFromActivityForConfigChanges() {
     }
+
 }

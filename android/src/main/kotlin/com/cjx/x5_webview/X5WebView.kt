@@ -1,12 +1,16 @@
 package com.cjx.x5_webview
 
 import android.annotation.TargetApi
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.util.Log
 import android.view.View
 import com.tencent.smtt.export.external.interfaces.IX5WebChromeClient
 import com.tencent.smtt.export.external.interfaces.WebResourceRequest
+import com.tencent.smtt.sdk.ValueCallback
 import com.tencent.smtt.sdk.WebChromeClient
 import com.tencent.smtt.sdk.WebView
 import com.tencent.smtt.sdk.WebViewClient
@@ -16,10 +20,10 @@ import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.platform.PlatformView
 
 
-@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-class X5WebView(private val context: Context?, private val id: Int, private val params: Map<String, Any>, private val messenger: BinaryMessenger?, private val containerView: View?) : PlatformView, MethodChannel.MethodCallHandler {
+class X5WebView(private val context: Activity?, private val id: Int, private val params: Map<String, Any>, private val messenger: BinaryMessenger?, private val containerView: View?) : PlatformView, MethodChannel.MethodCallHandler {
     private var webView: WebView = WebView(context)
     private val channel: MethodChannel = MethodChannel(messenger!!, "com.cjx/x5WebView_$id")
+//    private var openFileCallback:ValueCallback<Uri>? = null
 
     init {
         channel.setMethodCallHandler(this)
@@ -100,6 +104,20 @@ class X5WebView(private val context: Context?, private val id: Int, private val 
                     arg["progress"] = p1
                     channel.invokeMethod("onProgressChanged", arg)
                 }
+
+                override fun openFileChooser(p0: ValueCallback<Uri>?, p1: String?, p2: String?) {
+                    val act=context as Activity
+                    X5WebViewPlugin.chooserCallback=p0
+
+                    Log.e("--cjx","p1:$p1 --- p2:$p2")
+
+                    act.startActivityForResult(Intent(Intent.ACTION_PICK).apply {
+                                                                                type=p1
+                    }
+                        ,21211)
+
+                }
+
             }
 
 //            val data= Bundle()

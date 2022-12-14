@@ -1,20 +1,26 @@
 package com.cjx.x5_webview
 
 import android.app.Activity
+import android.content.Intent
 import android.graphics.PixelFormat
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import android.view.View
 import android.view.Window
 import android.widget.FrameLayout
+import com.tencent.smtt.export.external.interfaces.IX5WebChromeClient
 import com.tencent.smtt.export.external.interfaces.WebResourceRequest
+import com.tencent.smtt.sdk.ValueCallback
+import com.tencent.smtt.sdk.WebChromeClient
 import com.tencent.smtt.sdk.WebView
 import com.tencent.smtt.sdk.WebViewClient
 import io.flutter.plugin.common.MethodChannel
 import kotlin.collections.HashMap
 
 class X5WebViewActivity : Activity() {
-
+    var chooserCallback: ValueCallback<Uri>? = null
     var webView: WebView? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,6 +72,22 @@ class X5WebViewActivity : Activity() {
                     view.loadUrl(request?.url.toString())
                     return super.shouldOverrideUrlLoading(view, request)
                 }
+
+
+
+            }
+            webChromeClient = object : WebChromeClient() {
+
+                override fun openFileChooser(p0: ValueCallback<Uri>?, p1: String?, p2: String?) {
+                    chooserCallback=p0
+                    Log.e("--cjx","p1:$p1 --- p2:$p2")
+                    startActivityForResult(Intent(Intent.ACTION_PICK).apply {
+                        type=p1
+                    }
+                        ,21212)
+
+                }
+
             }
         }
     }
@@ -96,4 +118,14 @@ class X5WebViewActivity : Activity() {
         webView?.onResume()
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if(data!=null&&requestCode==21212&&chooserCallback!=null){
+            chooserCallback?.onReceiveValue(data.data)
+        }else{
+            chooserCallback?.onReceiveValue(null)
+        }
+        chooserCallback=null
+
+        super.onActivityResult(requestCode, resultCode, data)
+    }
 }
