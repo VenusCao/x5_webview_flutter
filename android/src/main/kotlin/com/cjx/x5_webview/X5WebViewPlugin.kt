@@ -74,72 +74,72 @@ class X5WebViewPlugin : MethodCallHandler, FlutterPlugin, ActivityAware {
                 TbsVideo.openVideo(mContext, url, bundle)
                 result.success(null)
             }
-            "openFile" -> {
-                //context:调起 miniqb 的 Activity 的 context。此参数只能是 activity 类型的 context，不能设置为 Application
-                //的 context。
-                //filePath:文件路径。格式为 android 本地存储路径格式，例如:/sdcard/Download/xxx.doc. 不支持 file:///
-                //格式。暂不支持在线文件。
-                //extraParams:miniqb 的扩展功能。为非必填项，可传入 null 使用默认设置。
-                //其格式是一个 key 对应一个 value。在文件查看器的产品形态中，当前支持 的 key 包括:
-                //local: “true”表示是进入文件查看器，如果不设置或设置为“false”，则进入 miniqb 浏览器模式。不是必
-                //须设置项。
-                //style: “0”表示文件查看器使用默认的 UI 样式。“1”表示文件查看器使用微信的 UI 样式。不设置此 key
-                //或设置错误值，则为默认 UI 样式。
-                //topBarBgColor: 定制文件查看器的顶部栏背景色。格式为“#xxxxxx”，例“#2CFC47”;不设置此 key 或设置
-                //错误值，则为默认 UI 样式。
-                //menuData: 该参数用来定制文件右上角弹出菜单，可传入菜单项的 icon 的文本，用户点击菜单项后，sdk
-                //会通过 startActivity+intent 的方式回调。menuData 是 jsonObject 类型，结构格式如下: public static final String jsondata =
-                //"{
-                //pkgName:\"com.example.thirdfile\", "
-                //+ "className:\"com.example.thirdfile.IntentActivity\","
-                //+ "thirdCtx: {pp:123},"
-                //+ "menuItems:"
-                //+ "["
-                //+ "{id:0,iconResId:"+ R.drawable.ic_launcher +",text:\"menu0\"},
-                //{id:1,iconResId:" + R.drawable.bookmark_edit_icon + ",text:\"menu1\"}, {id:2,iconResId:"+ R.drawable.bookmark_folder_icon +",text:\"菜单2\"}" + "]"
-                //+"
-                //}";
-                //pkgName 和 className 是回调时的包名和类名。
-                //thirdCtx 是三方参数，需要是 jsonObject 类型，sdk 不会处理该参数，只是在菜单点击事件发生的时候原样 回传给调用方。
-                //menuItems 是 json 数组，表示菜单中的每一项。
-                //ValueCallback:提供 miniqb 打开/关闭时给调用方回调通知,以便应用层做相应处理。 在单独进程打开文件的场景中，回调参数出现如下字符时，表示可以关闭当前进程，避免内存占用。 openFileReader open in QB
-                //filepath error
-                //TbsReaderDialogClosed
-                //default browser:
-                //filepath error
-                //fileReaderClosed
-
-
-                val filePath = call.argument<String>("filePath")
-                val params = hashMapOf<String, String>()
-                params["local"] = call.argument<String>("local") ?: "false"
-                params["style"] = call.argument<String>("style") ?: "0"
-                params["topBarBgColor"] = call.argument<String>("topBarBgColor") ?: "#2CFC47"
-                var menuData = call.argument<String>("menuData")
-                if (menuData != null) {
-                    params["menuData"] = menuData
-                }
-                if (!File(filePath).exists()) {
-                    Toast.makeText(mContext, "文件不存在,请确认$filePath 是否正确", Toast.LENGTH_LONG).show()
-                    result.success("文件不存在,请确认$filePath 是否正确")
-                    return
-                }
-                QbSdk.canOpenFile(mActivity, filePath) { canOpenFile ->
-                    if (canOpenFile) {
-                        QbSdk.openFileReader(mActivity, filePath, params) { msg ->
-                            Log.d("cjxQbSdk", msg)
-                            val close= listOf<String>("filepath error","TbsReaderDialogClosed","default browser","fileReaderClosed")
-                            if(close.contains(msg)){
-                                QbSdk.closeFileReader(mActivity)
-                                result.success(null)
-                            }
-                        }
-                    } else {
-                        Toast.makeText(mContext, "X5Sdk无法打开此文件", Toast.LENGTH_LONG).show()
-                        result.success("X5Sdk无法打开此文件")
-                    }
-                }
-            }
+//            "openFile" -> {
+//                //context:调起 miniqb 的 Activity 的 context。此参数只能是 activity 类型的 context，不能设置为 Application
+//                //的 context。
+//                //filePath:文件路径。格式为 android 本地存储路径格式，例如:/sdcard/Download/xxx.doc. 不支持 file:///
+//                //格式。暂不支持在线文件。
+//                //extraParams:miniqb 的扩展功能。为非必填项，可传入 null 使用默认设置。
+//                //其格式是一个 key 对应一个 value。在文件查看器的产品形态中，当前支持 的 key 包括:
+//                //local: “true”表示是进入文件查看器，如果不设置或设置为“false”，则进入 miniqb 浏览器模式。不是必
+//                //须设置项。
+//                //style: “0”表示文件查看器使用默认的 UI 样式。“1”表示文件查看器使用微信的 UI 样式。不设置此 key
+//                //或设置错误值，则为默认 UI 样式。
+//                //topBarBgColor: 定制文件查看器的顶部栏背景色。格式为“#xxxxxx”，例“#2CFC47”;不设置此 key 或设置
+//                //错误值，则为默认 UI 样式。
+//                //menuData: 该参数用来定制文件右上角弹出菜单，可传入菜单项的 icon 的文本，用户点击菜单项后，sdk
+//                //会通过 startActivity+intent 的方式回调。menuData 是 jsonObject 类型，结构格式如下: public static final String jsondata =
+//                //"{
+//                //pkgName:\"com.example.thirdfile\", "
+//                //+ "className:\"com.example.thirdfile.IntentActivity\","
+//                //+ "thirdCtx: {pp:123},"
+//                //+ "menuItems:"
+//                //+ "["
+//                //+ "{id:0,iconResId:"+ R.drawable.ic_launcher +",text:\"menu0\"},
+//                //{id:1,iconResId:" + R.drawable.bookmark_edit_icon + ",text:\"menu1\"}, {id:2,iconResId:"+ R.drawable.bookmark_folder_icon +",text:\"菜单2\"}" + "]"
+//                //+"
+//                //}";
+//                //pkgName 和 className 是回调时的包名和类名。
+//                //thirdCtx 是三方参数，需要是 jsonObject 类型，sdk 不会处理该参数，只是在菜单点击事件发生的时候原样 回传给调用方。
+//                //menuItems 是 json 数组，表示菜单中的每一项。
+//                //ValueCallback:提供 miniqb 打开/关闭时给调用方回调通知,以便应用层做相应处理。 在单独进程打开文件的场景中，回调参数出现如下字符时，表示可以关闭当前进程，避免内存占用。 openFileReader open in QB
+//                //filepath error
+//                //TbsReaderDialogClosed
+//                //default browser:
+//                //filepath error
+//                //fileReaderClosed
+//
+//
+//                val filePath = call.argument<String>("filePath")
+//                val params = hashMapOf<String, String>()
+//                params["local"] = call.argument<String>("local") ?: "false"
+//                params["style"] = call.argument<String>("style") ?: "0"
+//                params["topBarBgColor"] = call.argument<String>("topBarBgColor") ?: "#2CFC47"
+//                var menuData = call.argument<String>("menuData")
+//                if (menuData != null) {
+//                    params["menuData"] = menuData
+//                }
+//                if (!File(filePath).exists()) {
+//                    Toast.makeText(mContext, "文件不存在,请确认$filePath 是否正确", Toast.LENGTH_LONG).show()
+//                    result.success("文件不存在,请确认$filePath 是否正确")
+//                    return
+//                }
+//                QbSdk.canOpenFile(mActivity, filePath) { canOpenFile ->
+//                    if (canOpenFile) {
+//                        QbSdk.openFileReader(mActivity, filePath, params) { msg ->
+//                            Log.d("cjxQbSdk", msg)
+//                            val close= listOf<String>("filepath error","TbsReaderDialogClosed","default browser","fileReaderClosed")
+//                            if(close.contains(msg)){
+//                                QbSdk.closeFileReader(mActivity)
+//                                result.success(null)
+//                            }
+//                        }
+//                    } else {
+//                        Toast.makeText(mContext, "X5Sdk无法打开此文件", Toast.LENGTH_LONG).show()
+//                        result.success("X5Sdk无法打开此文件")
+//                    }
+//                }
+//            }
 
             "openWebActivity" -> {
                 val url = call.argument<String>("url")

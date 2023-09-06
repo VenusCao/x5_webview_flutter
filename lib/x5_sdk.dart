@@ -45,8 +45,8 @@ class X5Sdk {
         'isDownloadWithoutWifi': isDownloadWithoutWifi,
       };
 
-      bool res = await _channel.invokeMethod("setDownloadWithoutWifi", params);
-      return res;
+      await _channel.invokeMethod("setDownloadWithoutWifi", params);
+      return true;
     } else {
       return false;
     }

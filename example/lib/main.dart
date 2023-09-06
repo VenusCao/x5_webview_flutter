@@ -53,96 +53,96 @@ class _HomePageState extends State<HomePage> {
                       title: "X5内核信息");
                 },
                 child: Text("查看X5内核信息")),
-            ElevatedButton(
-                onPressed: () async {
-                  showInputDialog(
-                      onConfirm: (url) async {
-                        await X5Sdk.openVideo(url, screenMode: 104);
-                      },
-                      defaultText: "https://vjs.zencdn.net/v/oceans.mp4");
-
-                  // var canUseTbsPlayer = await X5Sdk.canUseTbsPlayer();
-                  // if (canUseTbsPlayer) {
-                  //   showInputDialog(
-                  //       onConfirm: (url) async {
-                  //         await X5Sdk.openVideo(url, screenMode: 104);
-                  //       },
-                  //       defaultText: "https://vjs.zencdn.net/v/oceans.mp4");
-                  // } else {
-                  //   print("x5Video不可用");
-                  // }
-                },
-                child: Text("x5video直接播放视频")),
-            ElevatedButton(
-                onPressed: () async {
-                  showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: Text("X5Sdk打开本地文件示例"),
-                          content: Text("请先下载再打开"),
-                          actions: <Widget>[
-                            TextButton(
-                              onPressed: () async {
-                                Navigator.pop(context);
-                              },
-                              child: Text("取消"),
-                            ),
-                            TextButton(
-                              onPressed: () async {
-                                try {
-                                  showDialog(
-                                      context: context,
-                                      barrierDismissible: false,
-                                      builder: (context) {
-                                        return AlertDialog(
-                                          content: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: <Widget>[
-                                              CircularProgressIndicator(),
-                                              Padding(
-                                                padding:
-                                                    EdgeInsets.only(top: 20),
-                                              ),
-                                              Text("等待下载")
-                                            ],
-                                          ),
-                                        );
-                                      });
-                                  var dir = await getExternalStorageDirectory();
-                                  print(await getExternalStorageDirectory());
-                                  print(await getApplicationSupportDirectory());
-                                  print(
-                                      await getApplicationDocumentsDirectory());
-                                  var response = await Dio().download(
-                                      "http://lc-QMTBhNKI.cn-n1.lcfile.com/fc441aa8ff4738cc3f85/FileList.xlsx",
-                                      "${dir.path}/FileList.xlsx");
-                                  print(response.data);
-                                  Navigator.pop(context);
-                                } on DioError catch (e) {
-                                  Navigator.pop(context);
-                                  print(e.message);
-                                }
-                              },
-                              child: Text("下载"),
-                            ),
-                            TextButton(
-                              onPressed: () async {
-                                var dir = await getExternalStorageDirectory();
-                                print(dir);
-                                var msg = await X5Sdk.openFile(
-                                    "${dir.path}/FileList.xlsx",
-                                    style: "1",
-                                    topBarBgColor: "#2196F3");
-                                print(msg);
-                              },
-                              child: Text("打开"),
-                            )
-                          ],
-                        );
-                      });
-                },
-                child: Text("x5sdk打开本地文件示例")),
+            // ElevatedButton(
+            //     onPressed: () async {
+            //       showInputDialog(
+            //           onConfirm: (url) async {
+            //             await X5Sdk.openVideo(url, screenMode: 104);
+            //           },
+            //           defaultText: "https://vjs.zencdn.net/v/oceans.mp4");
+            //
+            //       // var canUseTbsPlayer = await X5Sdk.canUseTbsPlayer();
+            //       // if (canUseTbsPlayer) {
+            //       //   showInputDialog(
+            //       //       onConfirm: (url) async {
+            //       //         await X5Sdk.openVideo(url, screenMode: 104);
+            //       //       },
+            //       //       defaultText: "https://vjs.zencdn.net/v/oceans.mp4");
+            //       // } else {
+            //       //   print("x5Video不可用");
+            //       // }
+            //     },
+            //     child: Text("x5video直接播放视频")),
+            // ElevatedButton(
+            //     onPressed: () async {
+            //       showDialog(
+            //           context: context,
+            //           builder: (context) {
+            //             return AlertDialog(
+            //               title: Text("X5Sdk打开本地文件示例"),
+            //               content: Text("请先下载再打开"),
+            //               actions: <Widget>[
+            //                 TextButton(
+            //                   onPressed: () async {
+            //                     Navigator.pop(context);
+            //                   },
+            //                   child: Text("取消"),
+            //                 ),
+            //                 TextButton(
+            //                   onPressed: () async {
+            //                     try {
+            //                       showDialog(
+            //                           context: context,
+            //                           barrierDismissible: false,
+            //                           builder: (context) {
+            //                             return AlertDialog(
+            //                               content: Column(
+            //                                 mainAxisSize: MainAxisSize.min,
+            //                                 children: <Widget>[
+            //                                   CircularProgressIndicator(),
+            //                                   Padding(
+            //                                     padding:
+            //                                         EdgeInsets.only(top: 20),
+            //                                   ),
+            //                                   Text("等待下载")
+            //                                 ],
+            //                               ),
+            //                             );
+            //                           });
+            //                       var dir = await getExternalStorageDirectory();
+            //                       print(await getExternalStorageDirectory());
+            //                       print(await getApplicationSupportDirectory());
+            //                       print(
+            //                           await getApplicationDocumentsDirectory());
+            //                       var response = await Dio().download(
+            //                           "http://lc-QMTBhNKI.cn-n1.lcfile.com/fc441aa8ff4738cc3f85/FileList.xlsx",
+            //                           "${dir?.path}/FileList.xlsx");
+            //                       print(response.data);
+            //                       Navigator.pop(context);
+            //                     } on DioError catch (e) {
+            //                       Navigator.pop(context);
+            //                       print(e.message);
+            //                     }
+            //                   },
+            //                   child: Text("下载"),
+            //                 ),
+            //                 TextButton(
+            //                   onPressed: () async {
+            //                     var dir = await getExternalStorageDirectory();
+            //                     print(dir);
+            //                     var msg = await X5Sdk.openFile(
+            //                         "${dir?.path}/FileList.xlsx",
+            //                         style: "1",
+            //                         topBarBgColor: "#2196F3");
+            //                     print(msg);
+            //                   },
+            //                   child: Text("打开"),
+            //                 )
+            //               ],
+            //             );
+            //           });
+            //     },
+            //     child: Text("x5sdk打开本地文件示例")),
             ElevatedButton(
                 onPressed: () async {
 //                                          Navigator.of(context).push(
@@ -208,7 +208,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void showInputDialog(
-      {@required ConfirmCallBack onConfirm, String defaultText = ""}) {
+      {required ConfirmCallBack onConfirm, String defaultText = ""}) {
     final _controller = TextEditingController(text: defaultText);
     showDialog(
         context: context,
@@ -249,8 +249,8 @@ class _HomePageState extends State<HomePage> {
       Permission.storage,
     ].request();
     //判断权限
-    if (!(statuses[Permission.phone].isGranted &&
-        statuses[Permission.storage].isGranted)) {
+    if (!(statuses[Permission.phone]!.isGranted &&
+        statuses[Permission.storage]!.isGranted)) {
       showDialog(
           context: context,
           builder: (context) {

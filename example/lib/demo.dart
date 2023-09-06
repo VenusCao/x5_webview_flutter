@@ -13,7 +13,7 @@ class DemoWebViewPage extends StatefulWidget {
 }
 
 class _DemoWebViewPageState extends State<DemoWebViewPage> {
-  X5WebViewController _controller;
+  X5WebViewController? _controller;
   final url;
 
   _DemoWebViewPageState(this.url);
@@ -82,7 +82,7 @@ class _DemoWebViewPageState extends State<DemoWebViewPage> {
 //                              });
                         },
                         onPageFinished: () async {
-                          var url = await _controller.currentUrl();
+                          var url = await _controller?.currentUrl();
                           print(url);
                         },
                         onProgressChanged: (progress) {
@@ -108,27 +108,11 @@ class _DemoWebViewPageState extends State<DemoWebViewPage> {
                         },
                       )
                     :
-                    //可替换为其他已实现ios webview,此处使用webview_flutter
-                    WebView(
-                        initialUrl: url,
-                        javascriptMode: JavascriptMode.unrestricted,
-                        javascriptChannels: [
-                          JavascriptChannel(
-                              name: "X5Web",
-                              onMessageReceived: (msg) {
-                                print(msg);
-                              })
-                        ].toSet(),
-                        onWebViewCreated: (control) {
-//                _otherController = control;
-//                var body = _otherController
-//                    .evaluateJavascript('document.body.innerHTML');
-//                print(body);
-                        },
-                      )),
+                    //可替换为webview_flutter
+                    Container()),
             ElevatedButton(
               onPressed: () {
-                _controller.evaluateJavascript(
+                _controller?.evaluateJavascript(
                     'document.getElementById("input").value="flutter调用js成功！"');
               },
               child: Text("flutter调用js(更改文字)"),
@@ -136,9 +120,9 @@ class _DemoWebViewPageState extends State<DemoWebViewPage> {
           ]),
         ),
         onWillPop: () async {
-          var canGoBack = await _controller.canGoBack();
+          var canGoBack = await _controller!.canGoBack();
           if (canGoBack) {
-            _controller.goBack();
+            _controller?.goBack();
             return false;
           } else {
             return true;
