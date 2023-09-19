@@ -284,9 +284,21 @@ class _HomePageState extends State<HomePage> {
     await X5Sdk.setDownloadWithoutWifi(true);
 
     //内核下载安装监听
-    await X5Sdk.setX5SdkListener(X5SdkListener(onInstallFinish: () {
+    //int	DOWNLOAD_CANCEL_NOT_WIFI	111，非Wi-Fi，不发起下载 setDownloadWithoutWifi(boolean) 进行设置
+    // int	DOWNLOAD_CANCEL_REQUESTING	133，下载请求中，不重复发起，取消下载
+    // int	DOWNLOAD_FLOW_CANCEL	-134，带宽不允许，下载取消。Debug阶段可webview访问 debugtbs.qq.com 安装线上内核
+    // int	DOWNLOAD_NO_NEED_REQUEST	-122，不发起下载请求，以下触发请求的条件均不符合：
+    // 1、距离最后请求时间24小时后（可调整系统时间）
+    // 2、请求成功超过时间间隔，网络原因重试小于11次
+    // 3、App版本变更
+    // int	DOWNLOAD_SUCCESS	100，内核下载成功
+    // int	INSTALL_FOR_PREINIT_CALLBACK	243，预加载中间态，非异常，可忽略
+    // int	INSTALL_SUCCESS	200，首次安装成功
+    // int	NETWORK_UNAVAILABLE	101，网络不可用
+    // int	STARTDOWNLOAD_OUT_OF_MAXTIME	127，发起下载次数超过1次（一次进程只允许发起一次下载）
+    await X5Sdk.setX5SdkListener(X5SdkListener(onInstallFinish: (int code) {
       print("X5内核安装完成");
-    }, onDownloadFinish: () {
+    }, onDownloadFinish: (int code) {
       print("X5内核下载完成");
     }, onDownloadProgress: (int progress) {
       print("X5内核下载中---$progress%");
@@ -330,7 +342,7 @@ class _HomePageState extends State<HomePage> {
     X5Sdk.openWebActivity(url, title: "web页面", callback: (url, headers) {
       print("拦截到url================$url");
       print("headers================$headers");
-      //可以递归无限套娃
+      //创建新的一个web页面,不创建callback传null
       openUrl(url);
     });
   }

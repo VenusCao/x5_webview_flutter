@@ -27,6 +27,7 @@ class X5WebView extends StatefulWidget {
   final UrlLoading? onUrlLoading;
   final Map<String, String>? header;
   final String? userAgentString;
+  final bool useExpensiveAndroidView;
 
   const X5WebView(
       {Key? key,
@@ -41,6 +42,7 @@ class X5WebView extends StatefulWidget {
       this.onUrlLoading,
       this.header,
       this.domStorageEnabled = true,
+      this.useExpensiveAndroidView = false,
       this.userAgentString})
       : super(key: key);
 
@@ -52,6 +54,7 @@ class _X5WebViewState extends State<X5WebView> {
   @override
   Widget build(BuildContext context) {
     if (defaultTargetPlatform == TargetPlatform.android) {
+      //输入兼容性不好
       //   return AndroidView(
       //     viewType: 'com.cjx/x5WebView',
       //     onPlatformViewCreated: _onPlatformViewCreated,
@@ -74,25 +77,37 @@ class _X5WebViewState extends State<X5WebView> {
           );
         },
         onCreatePlatformView: (params) {
+          if (widget.useExpensiveAndroidView) {
+            PlatformViewsService.initExpensiveAndroidView(
+              id: params.id,
+              viewType: 'com.cjx/x5WebView',
+              // WebView content is not affected by the Android view's layout direction,
+              // we explicitly set it here so that the widget doesn't require an ambient
+              // directionality.
+              layoutDirection: TextDirection.ltr,
+              creationParams: _CreationParams.fromWidget(widget).toMap(),
+              creationParamsCodec: const StandardMessageCodec(),
+            )
+              ..addOnPlatformViewCreatedListener(params.onPlatformViewCreated)
+              ..addOnPlatformViewCreatedListener((int id) {
+                _onPlatformViewCreated(id);
+              })
+              ..create();
+          }
+
           return PlatformViewsService.initSurfaceAndroidView(
             id: params.id,
             viewType: 'com.cjx/x5WebView',
             // WebView content is not affected by the Android view's layout direction,
             // we explicitly set it here so that the widget doesn't require an ambient
             // directionality.
-            layoutDirection: TextDirection.rtl,
+            layoutDirection: TextDirection.ltr,
             creationParams: _CreationParams.fromWidget(widget).toMap(),
             creationParamsCodec: const StandardMessageCodec(),
           )
             ..addOnPlatformViewCreatedListener(params.onPlatformViewCreated)
             ..addOnPlatformViewCreatedListener((int id) {
               _onPlatformViewCreated(id);
-              // if (onWebViewPlatformCreated == null) {
-              //   return;
-              // }
-              // onWebViewPlatformCreated(
-              //   MethodChannelWebViewPlatform(id, webViewPlatformCallbacksHandler),
-              // );
             })
             ..create();
         },

@@ -41,25 +41,6 @@ print(isOk ? "X5内核成功加载" : "X5内核加载失败");
 X5Sdk.openWebActivity("https://www.baidu.com",title: "web页面");
 ```
 
-
-* ~~使用TBSPlayer直接全屏播放视频(screenMode自行测试，103横屏-暂停播放会报错，默认104竖屏)~~
-```
-    var isOk = await X5Sdk.openVideo(
-    "https://ifeng.com-l-ifeng.com/20180528/7391_46b6cf3b/index.m3u8",screenMode: 104);
-```
-
-
-* 打开本地文件  
-接入TBS可支持打开文件格式：doc、docx、ppt、pptx、xls、xlsx、pdf、txt、epub  
-调用QQ浏览器可打开：rar（包含加密格式）、zip（包含加密格式）、tar、bz2、gz、7z（包含加密格式）、
-doc、docx、ppt、pptx、xls、xlsx、txt、pdf、epub、chm、html/htm、xml、mht、url、ini、log、
-bat、php、js、lrc、jpg、jpeg、png、gif、bmp、tiff 、webp、mp3、m4a、aac、amr、wav、ogg、mid、
-ra、wma、mpga、ape、flac
-```
-var errorMsg = await X5Sdk.openFile("/sdcard/download/FileList.xlsx");
-print(errorMsg);
-```
-
 ## 使用内嵌webview
 
 ```
@@ -171,7 +152,7 @@ flutter build apk --target-platform android-arm --no-shrink
         android:usesCleartextTraffic="true">
     </application>
     ```
-* android7.0版本打开文件需要在manifest的application内添加(xml文件已在插件内，无需自己创建)
+* android7.0读写文件需要在manifest的application内添加(xml文件已在插件内，无需自己创建)
     ```
           <!--        不使用androidx 请用android:name="android.support.v4.content.FileProvider"-->    
         <provider

@@ -11,8 +11,8 @@
         android:icon="@mipmap/ic_launcher"
         android:label="x5_webview_example"
         android:theme="@style/AppTheme"
-        android:networkSecurityConfig="@xml/network_config"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true"
+        android:requestLegacyExternalStorage="true">
         <uses-library android:name="org.apache.http.legacy" android:required="false"/>
 
         <activity

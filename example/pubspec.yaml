@@ -2,7 +2,7 @@ name: x5_webview_example
 description: Demonstrates how to use the x5_webview plugin.
 publish_to: 'none'
 
-version: 0.3.3+33
+version: 0.4.0+40
 
 environment:
   sdk: ">=3.1.0 <4.0.0"

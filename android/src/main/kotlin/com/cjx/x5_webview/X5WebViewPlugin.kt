@@ -38,15 +38,26 @@ class X5WebViewPlugin : MethodCallHandler, FlutterPlugin, ActivityAware {
                 QbSdk.initTbsSettings(map)
                 QbSdk.setTbsListener(object : TbsListener {
                     override fun onDownloadFinish(p0: Int) {
-                        methodChannel?.invokeMethod("onInstallFinish", null)
+                        Log.e("X5Sdk","onDownloadFinish"+p0)
+                        mActivity?.runOnUiThread {
+                            methodChannel?.invokeMethod("onDownloadFinish", p0)
+                        }
                     }
 
                     override fun onInstallFinish(p0: Int) {
-                        methodChannel?.invokeMethod("onDownloadFinish", null)
+                        Log.e("X5Sdk","onInstallFinish"+p0)
+                        mActivity?.runOnUiThread {
+                            methodChannel?.invokeMethod("onInstallFinish", p0)
+                        }
+
                     }
 
                     override fun onDownloadProgress(p0: Int) {
-                        methodChannel?.invokeMethod("onDownloadFinish", null)
+                        Log.e("X5Sdk","onDownloadProgress"+p0)
+                        mActivity?.runOnUiThread {
+                            methodChannel?.invokeMethod("onDownloadProgress", p0)
+                        }
+
                     }
 
                 })
@@ -57,6 +68,7 @@ class X5WebViewPlugin : MethodCallHandler, FlutterPlugin, ActivityAware {
 
                     override fun onViewInitFinished(p0: Boolean) {
                         //x5內核初始化完成的回调，为true表示x5内核加载成功，否则表示x5内核加载失败，会自动切换到系统内核。
+                        Log.e("X5Sdk","onViewInitFinished")
                         result.success(p0)
                     }
 
