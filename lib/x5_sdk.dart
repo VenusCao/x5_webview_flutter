@@ -42,6 +42,34 @@ class X5Sdk {
     }
   }
 
+  ///是否能直接使用x5内核播放视频
+  static Future<bool> canUseTbsPlayer() async {
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      bool res = await _channel.invokeMethod("canUseTbsPlayer");
+      return res;
+    } else {
+      return false;
+    }
+  }
+
+  ///screenMode 播放参数，
+  ///102竖屏全屏(第一次点击全屏无效)
+  ///103横屏全屏(暂停后会报错)，
+  ///104竖屏全屏(默认)
+  ///105竖屏全屏(双击后才会出现面板)
+  ///默认104
+  static Future<void> openVideo(String url, {int screenMode = 104}) async {
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      final Map<String, dynamic> params = <String, dynamic>{
+        'screenMode': screenMode,
+        'url': url
+      };
+      return await _channel.invokeMethod("openVideo", params);
+    } else {
+      return;
+    }
+  }
+
   ///打开简单的x5webview
   static Future<void> openWebActivity(String url,
       {String? title,

@@ -179,7 +179,8 @@ class _HomePageState extends State<HomePage> {
                       onConfirm: (url) {
                         openUrl(url);
                       },
-                      defaultText: "https://www.baidu.com");
+                      defaultText:
+                          "https://www.bilibili.com/video/BV1hD4y1X7Rm");
                 },
                 child: Text("x5webviewActivity")),
             ElevatedButton(
