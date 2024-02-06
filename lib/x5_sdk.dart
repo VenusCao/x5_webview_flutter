@@ -32,7 +32,7 @@ class X5Sdk {
   static Future<bool> setDownloadWithoutWifi(bool isDownloadWithoutWifi) async {
     if (defaultTargetPlatform == TargetPlatform.android) {
       final Map<String, dynamic> params = <String, dynamic>{
-        'isDownloadWithoutWifi': isDownloadWithoutWifi,
+        'isWithoutWifi': isDownloadWithoutWifi,
       };
 
       await _channel.invokeMethod("setDownloadWithoutWifi", params);
@@ -60,10 +60,7 @@ class X5Sdk {
   ///默认104
   static Future<void> openVideo(String url, {int screenMode = 104}) async {
     if (defaultTargetPlatform == TargetPlatform.android) {
-      final Map<String, dynamic> params = <String, dynamic>{
-        'screenMode': screenMode,
-        'url': url
-      };
+      final Map<String, dynamic> params = <String, dynamic>{'screenMode': screenMode, 'url': url};
       return await _channel.invokeMethod("openVideo", params);
     } else {
       return;
@@ -72,9 +69,7 @@ class X5Sdk {
 
   ///打开简单的x5webview
   static Future<void> openWebActivity(String url,
-      {String? title,
-      Map<String, String>? headers,
-      InterceptUrlCallBack? callback}) async {
+      {String? title, Map<String, String>? headers, InterceptUrlCallBack? callback}) async {
     if (defaultTargetPlatform == TargetPlatform.android) {
       final Map<String, dynamic> params = <String, dynamic>{
         'title': title ?? "",
@@ -116,8 +111,7 @@ class X5Sdk {
           listener.onDownloadProgress(call.arguments);
           break;
         default:
-          throw MissingPluginException(
-              '${call.method} was invoked but has no handler');
+          throw MissingPluginException('${call.method} was invoked but has no handler');
       }
     });
   }
@@ -153,8 +147,5 @@ class X5SdkListener {
   ///下载进度监听
   DownloadProgress onDownloadProgress;
 
-  X5SdkListener(
-      {required this.onInstallFinish,
-      required this.onDownloadFinish,
-      required this.onDownloadProgress});
+  X5SdkListener({required this.onInstallFinish, required this.onDownloadFinish, required this.onDownloadProgress});
 }
